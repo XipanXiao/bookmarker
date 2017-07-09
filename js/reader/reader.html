@@ -1,0 +1,13 @@
+<form method="GET" target="main_iframe" action="cgi-bin/proxy.php">
+  <div class="url-input">
+    <label>
+      请输入地址
+      <input type="url" id="url" name="url"
+          value="http://www.qldzj.com.cn/html/qldzj-ml.htm">
+    </label>
+    <input type="submit">
+  </div>
+</form>
+<iframe class="reader" name="main_iframe" onload="alterIframeDoc()"
+    src="cgi-bin/proxy.php?url=http://www.qldzj.com.cn/html/qldzj-ml.htm">
+</iframe>

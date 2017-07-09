@@ -1,0 +1,13 @@
+<div class="css-table odd-even">
+  <div ng-repeat="bookmark in bookmarks" class="css-table-row deletable"
+      ng-click="search(bookmark.anchor)">
+    <div class="css-table-cell">{{$index + 1}}</div>
+    <div class="css-table-cell anchor-field">{{bookmark.anchor}}</div>
+    <div class="css-table-cell delete-button" ng-click="remove(bookmark.id)">
+      x
+    </div>
+  </div>
+</div>
+<div class="padded-element right">
+  <input type="submit" value="Add bookmark" ng-click="create()">
+</div>
