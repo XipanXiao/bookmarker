@@ -14,7 +14,7 @@ function get_db_error() {
 function getBookMarks($userId) {
   global $medoo;
   
-  $medoo->select("bookmarks", "*", ["user_id" => $userId]);
+  return $medoo->select("bookmarks", "*", ["user_id" => $userId]);
 }
 
 function updateBookmark($bookmark) {
@@ -35,7 +35,7 @@ function deleteBookmark($id) {
 if ($_SERVER ["REQUEST_METHOD"] == "GET") {
   $response = getBookMarks($_GET["user_id"]);
 } else if ($_SERVER ["REQUEST_METHOD"] == "POST") {
-  $response = ["updated" => updateBookmark($_POST)];
+  $response = ["updated" => intval(updateBookmark($_POST))];
 } elseif ($_SERVER ["REQUEST_METHOD"] == "DELETE") {
   $response = ["deleted" => deleteBookmark($_REQUEST["id"])];
 }

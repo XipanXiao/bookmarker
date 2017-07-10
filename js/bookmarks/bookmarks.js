@@ -45,7 +45,9 @@ define('bookmarks/bookmarks',
         function getUrl() {
           var iframe = frames['main_iframe'];
           var window = iframe.window;
-          return window.location.href;
+          var url = window.location.href;
+          var parts = url.split('url=');
+          return parts[1];
         }
         
         scope.search = function(text) {

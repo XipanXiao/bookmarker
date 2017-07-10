@@ -1,30 +1,5 @@
 <?php
 include_once 'config.php';
-// include_once 'encoding.php';
-// use \ForceUTF8\Encoding;
-//include_once "datatype.php";
-//include_once 'permission.php';
-
-// if (empty($_SESSION["user"])) {
-//   echo '{"error": "login needed"}';
-//   exit();
-// } else {
-//   $user = unserialize($_SESSION["user"]);
-// }
-
-if (!function_exists('http_parse_cookies')) {
-	function http_parse_cookies($raw_headers) {
-		preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $raw_headers, $matches);
-
-		$cookies = array();
-		foreach($matches[1] as $item) {
-			parse_str($item, $cookie);
-			$cookies = array_merge($cookies, $cookie);
-		}
-
-		return $cookies;
-	}
-}
 
 $ch = null;
 try {
@@ -68,7 +43,8 @@ try {
 
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-  
+  curl_setopt($ch, CURLOPT_ENCODING ,"");
+
   session_write_close();
   $response = curl_exec($ch);
   session_start();
@@ -80,19 +56,13 @@ try {
 
   $header = substr($response, 0, $header_size);
   $body = substr($response, $header_size);
+
+  preg_match( "/<meta .*charset=\"(.+?)\"/i", $body, $encoding);
   
-  $cookies = http_parse_cookies($header);
-
-  // Pass cookies to the client with a 'PROXY_' prefix in their name.
-  foreach ($cookies as $key => $value) {
-  	setcookie('PROXY_' . $key, $value);
+  if (!empty($encoding)) {
+    header("Content-Type:text/html;charset=". $encoding[1]);
   }
-
-  if (stristr($body, 'charset="gb2312"')) {
-  	echo mb_convert_encoding($body, 'UTF-8', 'GB2312');
-  } else {
-  	echo $body;
-  }
+  echo $body;
 } catch(Exception $e) {
   if ($ch) {
     curl_close($ch);
