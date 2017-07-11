@@ -33,7 +33,6 @@ try {
   	$url = $_POST['url'];
     curl_setopt($ch, CURLOPT_POST, 1);
   	curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($_POST));
-  } elseif ($_SERVER ["REQUEST_METHOD"] == "DELETE") {
   }
 
   if (!$url) {
@@ -41,6 +40,7 @@ try {
   	exit();
   }
 
+  $url = urldecode($url);
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
   curl_setopt($ch, CURLOPT_ENCODING ,"");
