@@ -9,7 +9,7 @@
 <div class="css-table odd-even" ng-if="!collapsed">
   <div ng-repeat="bookmark in bookmarks" class="css-table-row clickable">
     <div class="css-table-cell">
-      <div class="title-field" ng-click="open(bookmark.url)" title="打开页面">
+      <div class="title-field" ng-click="open(bookmark)" title="打开页面">
         {{bookmark.title}}
       </div>
       <div class="anchor-field" ng-click="search(bookmark.anchor)"

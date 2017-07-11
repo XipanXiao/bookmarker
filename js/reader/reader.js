@@ -2,7 +2,7 @@ define('reader/reader',
     ['services', 'utils'], function() {
   return angular.module('ReaderModule', [
       'ServicesModule',
-      'UtilsModule']).directive('reader', function(rpc, utils) {
+      'UtilsModule']).directive('reader', function($rootScope, rpc, utils) {
     return {
       link: function(scope) {
         function getIFrameDoc(x) {
@@ -56,6 +56,7 @@ define('reader/reader',
           var doc = getIFrameDoc(iframe);
           clearIframeObjects(doc);
           redirectAnchors(doc);
+          $rootScope.$broadcast('reader-loaded');
         }
       },
       templateUrl : 'js/reader/reader.html?tag=201707031806'

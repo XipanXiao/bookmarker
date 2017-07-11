@@ -17,6 +17,10 @@ define('bookmarks/bookmarks',
         function reload(userId) {
           rpc.get_bookmarks(userId).then(function(response) {
             scope.bookmarks = response.data || [];
+            var bookmark = utils.last(scope.bookmarks);
+            if (bookmark) {
+              scope.open(bookmark);
+            }
           });
         };
         
@@ -66,8 +70,14 @@ define('bookmarks/bookmarks',
           return document.title;
         }
         
-        scope.open = function(url) {
-          setUrl(url);
+        scope.open = function(bookmark) {
+          setUrl(bookmark.url);
+          var deregisterListener = scope.$on('reader-loaded', function() {
+            deregisterListener();
+            setTimeout(function() {
+                scope.search(bookmark.anchor);
+              }, 1000);
+          });
         };
 
         scope.search = function(text) {
