@@ -57,10 +57,7 @@ define('bookmarks/bookmarks',
         function setUrl(url) {
           var iframe = frames['main_iframe'];
           var window = iframe.window;
-          var href = window.location.href;
-          var index = href.indexOf('url=');
-          window.location.href = href.substring(0, index) + 'url=' + 
-              encodeURIComponent(url);
+          window.location.href = utils.getProxyUrl(url);
         }
         
         function getTitle() {

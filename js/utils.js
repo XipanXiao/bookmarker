@@ -371,6 +371,13 @@ define('utils', [], function() {
         if (file) window.URL.revokeObjectURL(file);
         return file = window.URL.createObjectURL(data);
       },
+      
+      getProxyUrl: function(url) {
+        var href = window.location.href;
+        var index = href.lastIndexOf('/');
+        return href.substring(0, index) + '/cgi-bin/proxy.php?url=' + 
+            encodeURIComponent(url);
+      },
 
       // Index of bit in the user.enroll_tasks bits.
       // Indicating whether welcome letter is sent.

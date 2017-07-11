@@ -17,10 +17,6 @@ define('reader/reader',
           }
         }
 
-        function getProxyUrl(url) {
-          return 'proxy.php?url=' + encodeURIComponent(url);
-        }
-
         function redirectAnchors(doc) {
           var head = doc.getElementsByTagName('head')[0];
           var base = head.getElementsByTagName('base')[0];
@@ -37,7 +33,7 @@ define('reader/reader',
             if (anchor.tagName.toLowerCase() == 'base') continue;
 
             a.href = anchor.href;
-            anchor.href = a.href;//getProxyUrl(a.href);
+            anchor.href = a.href;
             anchor.target = '';
           }
 
@@ -47,7 +43,7 @@ define('reader/reader',
             var anchor = anchors.item(i);
             if (anchor.tagName.toLowerCase() == 'base') continue;
 
-            anchor.href = getProxyUrl(anchor.href);
+            anchor.href = utils.getProxyUrl(anchor.href);
           }
         }
 
