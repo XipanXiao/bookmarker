@@ -2,8 +2,6 @@ body {
   background: rgb(241, 241, 241);
   font-family: arial,sans-serif;
   font-size: 14px;
-  max-width: 1280px;
-  overflow-x: scroll;
 }
 
 .center {
@@ -228,8 +226,9 @@ select#state {
 	width: 60px;
 }
 
+.title-field,
 .anchor-field {
-  max-width: 50px;
+  max-width: 350px;
   overflow-x: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -500,6 +499,11 @@ address-filter {
   padding-left: 16px;	
 }
 
-google-chart {
-  width: 700px;
+.clickable {
+  cursor: pointer;
+}
+
+.g-signin2 {
+  position: absolute;
+  right: 8px;
 }

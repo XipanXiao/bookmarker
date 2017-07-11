@@ -18,7 +18,7 @@ define('reader/reader',
         }
 
         function getProxyUrl(url) {
-          return 'proxy.php?url=' + url;
+          return 'proxy.php?url=' + encodeURIComponent(url);
         }
 
         function redirectAnchors(doc) {

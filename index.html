@@ -22,11 +22,11 @@
     </script>
   </head>
   <body>
-    <div class="g-signin2 right" data-onsuccess="onSignIn" data-theme="dark">
+    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark">
     </div>
     <div class="center flex">
       <input ng-show="false" type="text" ng-model="userId" id="user-id">
-      <bookmarks user-id="userId"></bookmarks>
+      <bookmarks ng-if="userId" user-id="userId"></bookmarks>
       <reader></reader> 
     </div>
     <script type="text/javascript" src="index.js?tag=201707081244"></script>

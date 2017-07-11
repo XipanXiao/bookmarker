@@ -1,13 +1,24 @@
-<div class="padded-element right">
+<span ng-switch="collapsed" ng-click="collapsed = !collapsed"
+    class="clickable padded-element">
+  <span ng-switch-when="true" title="显示书签列表">&gt;&gt;</span>
+  <span ng-switch-default title="隐藏书签列表">&lt;&lt;</span>
+</span>
+<div class="padded-element" ng-if="!collapsed">
   <input type="submit" value="Add bookmark" ng-click="create()">
 </div>
-<div class="css-table odd-even">
-  <div ng-repeat="bookmark in bookmarks" class="css-table-row deletable"
-      ng-click="search(bookmark.anchor)">
-    <div class="css-table-cell">{{$index + 1}}</div>
-    <div class="css-table-cell anchor-field">{{bookmark.anchor}}</div>
-    <div class="css-table-cell delete-button" ng-click="remove(bookmark.id)">
-      x
+<div class="css-table odd-even" ng-if="!collapsed">
+  <div ng-repeat="bookmark in bookmarks" class="css-table-row clickable">
+    <div class="css-table-cell">
+      <div class="title-field" ng-click="open(bookmark.url)" title="打开页面">
+        {{bookmark.title}}
+      </div>
+      <div class="anchor-field" ng-click="search(bookmark.anchor)"
+          title="跳转到书签">
+        {{bookmark.anchor}}
+      </div>
+    </div>
+    <div class="css-table-cell" ng-click="remove(bookmark)" title="删除书签">
+      <span class="clickable">x</span>
     </div>
   </div>
 </div>

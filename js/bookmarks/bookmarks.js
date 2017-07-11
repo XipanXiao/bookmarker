@@ -22,7 +22,7 @@ define('bookmarks/bookmarks',
         
         scope.remove = function(bookmark) {
           rpc.remove_bookmark(bookmark.id).then(function(response) {
-            if (response.deleted) {
+            if (parseInt(response.data.deleted)) {
               var index = scope.bookmarks.indexOf(bookmark);
               scope.bookmarks.splice(index, 1);
             }
@@ -50,6 +50,26 @@ define('bookmarks/bookmarks',
           return parts[1];
         }
         
+        function setUrl(url) {
+          var iframe = frames['main_iframe'];
+          var window = iframe.window;
+          var href = window.location.href;
+          var index = href.indexOf('url=');
+          window.location.href = href.substring(0, index) + 'url=' + 
+              encodeURIComponent(url);
+        }
+        
+        function getTitle() {
+          var iframe = frames['main_iframe'];
+          var window = iframe.window;
+          var document = iframe.contentDocument || window.document;
+          return document.title;
+        }
+        
+        scope.open = function(url) {
+          setUrl(url);
+        };
+
         scope.search = function(text) {
           var iframe = frames['main_iframe'];
           var window = iframe.window;
@@ -78,6 +98,7 @@ define('bookmarks/bookmarks',
           var bookmark = {
             user_id: scope.userId,
             url: getUrl(),
+            title: getTitle(),
             anchor: getSelectionText()
           };
           rpc.create_bookmark(bookmark).then(function(response) {

@@ -5,7 +5,7 @@
     "password": "2345678901",
     "dbname": "bookmarker"
   },
-  "bookmark-bicw.rhcloud.com": {
+  "bookmarker-bicw.rhcloud.com": {
     "servername": "${OPENSHIFT_MYSQL_DB_HOST}",
     "username": "${OPENSHIFT_MYSQL_DB_USERNAME}",
     "password": "${OPENSHIFT_MYSQL_DB_PASSWORD}",
