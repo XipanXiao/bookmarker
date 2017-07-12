@@ -374,7 +374,7 @@ define('utils', [], function() {
       
       getProxyUrl: function(url) {
         var href = window.location.href;
-        var index = href.lastIndexOf('/');
+        var index = window.location.pathname && href.lastIndexOf('/');
         return href.substring(0, index) + '/cgi-bin/proxy.php?url=' + 
             encodeURI(url);
       },
