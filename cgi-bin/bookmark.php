@@ -23,7 +23,7 @@ function updateBookmark($bookmark) {
   $where = ["AND" => 
       ["user_id" => $bookmark["user_id"], "url" => $bookmark["url"]]];
   $medoo->delete("bookmarks", $where);
-  return $medoo->insert("bookmarks", $bookmark, $where);
+  return $medoo->insert("bookmarks", $bookmark);
 }
 
 function deleteBookmark($id) {

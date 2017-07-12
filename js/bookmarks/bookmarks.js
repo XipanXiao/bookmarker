@@ -110,7 +110,7 @@ define('bookmarks/bookmarks',
           };
           rpc.create_bookmark(bookmark).then(function(response) {
             if (response.data.updated) {
-              scope.bookmarks.push(bookmark);
+              reload(scope.userId);
             }
           });
         };
