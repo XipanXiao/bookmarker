@@ -376,7 +376,7 @@ define('utils', [], function() {
         var href = window.location.href;
         var index = href.lastIndexOf('/');
         return href.substring(0, index) + '/cgi-bin/proxy.php?url=' + 
-            encodeURIComponent(url);
+            encodeURI(url);
       },
 
       // Index of bit in the user.enroll_tasks bits.
