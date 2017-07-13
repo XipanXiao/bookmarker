@@ -10,13 +10,15 @@ define('bookmarks/bookmarks',
       link: function(scope) {
         scope.$watch('userId', function(userId) {
           if (userId) {
-            reload(userId);
+            reload(true);
           }
         });
         
-        function reload(userId) {
-          rpc.get_bookmarks(userId).then(function(response) {
+        function reload(openPage) {
+          rpc.get_bookmarks(scope.userId).then(function(response) {
             scope.bookmarks = response.data || [];
+            if (!openPage) return;
+
             var bookmark = utils.last(scope.bookmarks);
             if (bookmark) {
               scope.open(bookmark);
@@ -68,6 +70,11 @@ define('bookmarks/bookmarks',
         }
         
         scope.open = function(bookmark) {
+          if (getUrl() == bookmark.url) {
+            scope.search(bookmark.anchor);
+            return;
+          }
+
           setUrl(bookmark.url);
           var deregisterListener = scope.$on('reader-loaded', function() {
             deregisterListener();
@@ -110,7 +117,7 @@ define('bookmarks/bookmarks',
           };
           rpc.create_bookmark(bookmark).then(function(response) {
             if (response.data.updated) {
-              reload(scope.userId);
+              reload();
             }
           });
         };

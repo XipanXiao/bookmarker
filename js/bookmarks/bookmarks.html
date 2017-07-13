@@ -8,17 +8,12 @@
 </div>
 <div class="css-table odd-even" ng-if="!collapsed">
   <div ng-repeat="bookmark in bookmarks" class="css-table-row clickable">
-    <div class="css-table-cell">
-      <div class="title-field" ng-click="open(bookmark)" title="打开页面">
-        {{bookmark.title}}
-      </div>
-      <div class="anchor-field" ng-click="search(bookmark.anchor)"
-          title="跳转到书签">
-        {{bookmark.anchor}}
-      </div>
+    <div class="css-table-cell" ng-click="open(bookmark)">
+      <div class="title-field">{{bookmark.title}}</div>
+      <div class="anchor-field">{{bookmark.anchor}}</div>
     </div>
     <div class="css-table-cell" ng-click="remove(bookmark)" title="删除书签">
-      <span class="clickable">x</span>
+      x
     </div>
   </div>
 </div>
