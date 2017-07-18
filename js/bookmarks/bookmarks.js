@@ -94,14 +94,14 @@ define('bookmarks/bookmarks',
             var sel = window.getSelection();
             sel.collapse(document.body, 0);
             
-            while (window.find(text)) {
+            if (window.find(text)) {
                 document.execCommand("HiliteColor", false, "yellow");
                 sel.collapseToEnd();
             }
             document.designMode = "off";
           } else if (document.body.createTextRange) {
             var textRange = document.body.createTextRange();
-            while (textRange.findText(text)) {
+            if (textRange.findText(text)) {
                 textRange.execCommand("BackColor", false, "yellow");
                 textRange.collapse(false);
             }
