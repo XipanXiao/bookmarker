@@ -21,12 +21,12 @@ reader,
 .reader {
   border: none;
   height: 100%; 
-	width: 100%;
+  width: 100%;
 }
 
 body.admin {
   max-width: 1440px;
-  overflow-x: auto;	
+  overflow-x: auto;  
 }
 
 .padded-element {
@@ -223,7 +223,7 @@ select#state {
 
 .name-field {
   display: block;
-	width: 60px;
+  width: 60px;
 }
 
 .title-field,
@@ -315,59 +315,9 @@ paper-dialog#preview {
   text-overflow: ellipsis;
 }
 
-.diff-modified {
-  background: red;
-}
-
-.diff-added {
-  background: green;
-}
-
-.preview-progress {
-  width: 1100px;
-}
-
-.legend {
-  width: 100px;
-  padding: 0 16px;
-}
-
-.old-data {
-  text-decoration: line-through;  
-}
-
-paper-dialog > * {
-  margin-top: 0;  
-}
-
-iron-icon[icon="icons:done"] {
-  color: green;
-}
-
-iron-icon[icon="icons:error"] {
-  color: red;
-}
-
-paper-progress.task-progress {
-  width: 100%;
-}
-
-div.task-stats {
-  background: white;
-  border: 1px solid rgba(0,0,0,0.25);
-  border-radius: 4px;
-  margin-left: 16px;
-  width: 920px;
-}
-
-.task-stats > .progress-bar-container {
-  background: transparent;
-  width: 600px;
-}
-
 .progress-bar-container {
   background: #e0e0e0;
-  height: 4px;
+  height: 40px;
   overflow: hidden;
   width: 100%;
 }
@@ -375,10 +325,6 @@ div.task-stats {
 .progress-bar {
   background: #0f9d58;
   height: 100%;
-}
-
-.group-editing {
-  width: 500px;
 }
 
 paper-dialog#course-editor-dlg {
@@ -448,7 +394,7 @@ paper-dialog#new-user-dlg {
 }
 
 .check-complete {
-	text-align: right;
+  text-align: right;
 }
 
 .completed-task {
@@ -496,7 +442,7 @@ address-filter {
 }
 
 .indented {
-  padding-left: 16px;	
+  padding-left: 16px;  
 }
 
 .clickable {
@@ -506,4 +452,51 @@ address-filter {
 .g-signin2 {
   position: absolute;
   right: 8px;
+}
+
+.center-align {
+  text-align: center;
+}
+
+.book-container {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 16px;
+}
+
+.book {
+  background-color: #db8d0f;
+  border: 1px solid rgba(0,0,0,0.25);
+  border-radius: 4px;
+  color: white;
+  height: 100px;
+  margin: 8px;
+  position: relative;
+  width: 80px;
+}
+
+.book.finished {
+  background-color: #0f9d58;
+}
+
+.book-name {
+  cursor: pointer;
+  height: 80px;
+  overflow: hidden;
+}
+
+.serial {
+  bottom: 0;
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+}
+
+.logedIn .book:hover .serial:after {
+  bottom: 0;
+  content: "✅";
+  cursor: pointer;
+  pointer-events: all;
+  position: absolute;
+  right: 2px;
 }

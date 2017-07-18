@@ -1,0 +1,7 @@
+js/require.js
+js/angular.min.js
+js/utils.js
+js/services.js
+js/reader/reader.js
+js/bookmarks/bookmarks.js
+js/reader_app.js
