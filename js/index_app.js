@@ -42,25 +42,37 @@ define('index_app', [
               });
             }
             
+            function getProgresses() {
+              return rpc.get_progress(scope.userId).then(function(response) {
+                var progresses = response.data;
+                scope.finished = utils.keys(progresses).length;
+                scope.books.forEach(function(book) {
+                  var progress = progresses[book.id];
+                  book.finished = progress && progress.finished;
+                });
+                return progresses;
+              });
+            }
+            
             scope.sourceChanged = function() {
               var id = scope.source.id;
               if (scope.sources) {
                 utils.mix_in(scope.source, scope.sources[id]);
               }
-              utils.requestOneByOne([getSources, getSutraList]);
+              scope.sourceRequests = 
+                  utils.requestOneByOne([getSources, getSutraList]);
             };
 
             scope.$watch("userId", function(userId) {
               if (userId) {
                 scope.userId = userId;
-                rpc.get_progress(userId).then(function(response) {
-                  var progresses = response.data;
-                  scope.finished = utils.keys(progresses).length;
-                  scope.books.forEach(function(book) {
-                    var progress = progresses[book.id];
-                    book.finished = progress && progress.finished;
+                if (scope.sourceRequests) {
+                  scope.sourceRequests.then(function(response) {
+                    getProgresses();
                   });
-                });
+                } else {
+                  getProgresses();
+                }
               }
             });
             
