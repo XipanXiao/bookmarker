@@ -31,11 +31,11 @@
     <h1 class="center-align">深入经藏，智慧如海</h1>
     <input ng-show="false" type="text" ng-model="userId" id="user-id">
     <div class="center-align">
-      进度：已完成{{finished}}部，共{{books.length}}部
+      进度：已完成{{progresses.length}}部，共{{total}}部
       <span ng-if="!userId">(点右上角按钮登录可保存书签和进度)</span>
     </div>
     <div class="progress-bar-container">
-      <div class="progress-bar" style="width: {{finished*100.0/books.length}}%">
+      <div class="progress-bar" style="width: {{progresses.length*100.0/total}}%">
       </div>
     </div>
     <div class="padded-element">

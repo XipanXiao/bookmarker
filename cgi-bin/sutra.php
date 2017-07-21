@@ -29,8 +29,7 @@ function keyed_by_id($results, $id_field = "id") {
 function get_progress($user_id) {
   global $medoo;
   
-  return keyed_by_id($medoo->select("progress", "*", ["user_id" => $user_id]),
-      "book_id");
+  return $medoo->select("progress", "*", ["user_id" => $user_id]);
 }
 
 function update_progress($user_id, $book_id, $finished) {

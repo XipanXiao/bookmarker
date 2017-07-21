@@ -38,7 +38,13 @@ define('index_app', [
             function getSutraList() {
               return rpc.get_sutra_list(scope.source.id)
                   .then(function(response) {
-                return scope.books = response.data;
+                scope.books = [];
+                scope.total = 0;
+                response.data.forEach(function(book) {
+                  scope.total++;
+                  scope.books[book.id] = book;
+                });
+                return scope.books;
               });
             }
             
@@ -46,21 +52,14 @@ define('index_app', [
               return rpc.get_progress(scope.userId).then(function(response) {
                 var progresses = response.data;
                 if (utils.isEmpty(progresses)) {
-                  scope.finished = 0;
-                  return false;
+                  progresses = [];
                 }
 
-                var processed = 0;
-                scope.finished = utils.keys(progresses).length;
-                for (var index in scope.books) {
-                  var book = scope.books[index];
-                  var progress = progresses[book.id];
-                  if (!progress) continue;
-
+                progresses.forEach(function(progress) {
+                  var book = scope.books[progress.book_id];
                   book.finished = progress.finished;
-                  if (++processed == scope.finished) break;
-                }
-                return progresses;
+                });
+                return scope.progresses = progresses;
               });
             }
             
