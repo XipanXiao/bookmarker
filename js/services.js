@@ -38,8 +38,13 @@ define('services', [], function() {
         return $http.delete(url);
       },
 
-      get_sutra_list: function() {
-        return $http.get('{0}?rid=sutra'.format(sutraUrl));
+      get_sutra_sources: function() {
+        return $http.get('{0}?rid=sources'.format(sutraUrl));
+      },
+      
+      get_sutra_list: function(source) {
+        return $http.get('{0}?rid=sutra&source={1}'
+            .format(sutraUrl, source || 1));
       },
       
       get_progress: function(userId) {

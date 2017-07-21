@@ -463,7 +463,7 @@ address-filter {
 .book-container {
   display: flex;
   flex-wrap: wrap;
-  padding: 16px;
+  padding: 8px 64px;
 }
 
 .book {
@@ -501,4 +501,12 @@ address-filter {
   pointer-events: all;
   position: absolute;
   right: 2px;
+}
+
+.logedIn .book.finished:hover .serial:after {
+  content: "❎";
+}
+
+.sutra-sources {
+  border: none;
 }

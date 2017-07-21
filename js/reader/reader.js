@@ -4,32 +4,12 @@ define('reader/reader',
       'ServicesModule',
       'UtilsModule']).directive('reader', function($rootScope, rpc, utils) {
     return {
+      scope: {
+        showAddressInput: '@'
+      },
       link: function(scope) {
-        scope.url = 
-            'http://www.muni-buddha.com.tw/buddhism/directory-wiki.html';
+        scope.url = 'http://www.qldzj.com.cn/html/qldzj-ml.htm';
 
-        function getUrlParameter(name) {
-          var result = null;
-          var params = location.search.substr(1).split("&");
-          for (var i in params) {
-              var pair = params[i].split('=');
-              if (pair[0] === name) return pair[1];
-          }
-        }
-
-        var sutraTitle = getUrlParameter('title');
-//        if (sutraTitle) {
-//          scope.url = '{0} site:www.qldzj.com.cn'.format(sutraTitle);
-//          setUrl('https://www.google.com/' +
-//              encodeURIComponent('?q=' + scope.url));
-//        }
-
-        function setUrl(url) {
-          var iframe = frames['main_iframe'];
-          var window = iframe.window;
-          window.location.href = utils.getProxyUrl(url);
-        }
-        
         function getIFrameDoc(x) {
           return x.document || x.contentDocument || x.contentWindow.document;
         }
@@ -47,7 +27,7 @@ define('reader/reader',
           var base = head.getElementsByTagName('base')[0];
           if (!base) {
             base = doc.createElement('base');
-            base.href = document.getElementById('url').value;
+            base.href = scope.url;
             head.appendChild(base);
           }
           var a = doc.createElement('a');

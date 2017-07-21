@@ -26,9 +26,10 @@
     </div>
     <div class="center flex">
       <input ng-show="false" type="text" ng-model="userId" id="user-id">
-      <bookmarks ng-if="userId" user-id="userId"></bookmarks>
-      <reader show-address-input="true"></reader> 
+      <bookmarks ng-show="userId" user-id="userId" source="source">
+      </bookmarks>
+      <reader></reader>
     </div>
-    <script type="text/javascript" src="reader.js?tag=201707120800"></script>
+    <script type="text/javascript" src="sutra.js?tag=201707120800"></script>
   </body>
 </html>

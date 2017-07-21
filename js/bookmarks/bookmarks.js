@@ -5,6 +5,7 @@ define('bookmarks/bookmarks',
       'UtilsModule']).directive('bookmarks', function(rpc, utils) {
     return {
       scope: {
+        source: '=',
         userId: '='
       },
       link: function(scope) {
@@ -13,16 +14,43 @@ define('bookmarks/bookmarks',
             reload(true);
           }
         });
+        scope.$watch('source', function(source) {
+          if (source) {
+            reload(true);
+          }
+        });
+
+        function findBookmark() {
+          if (!scope.source) return utils.last(scope.bookmarks);
+
+          var volume = scope.source.volume;
+          for (var index in scope.bookmarks) {
+            var item = scope.bookmarks[index];
+            if (volume == scope.source.getVolume(item.url)) {
+              return item;
+            }
+          }
+        }
         
+        function openBookmarkedPage() {
+          var bookmark = findBookmark();
+          if (bookmark) {
+            scope.open(bookmark);
+          } else if (scope.source) {
+            setUrl(scope.source.url);
+          }
+        }
+
         function reload(openPage) {
+          if (!scope.userId) {
+            openBookmarkedPage();
+            return;
+          }
           rpc.get_bookmarks(scope.userId).then(function(response) {
             scope.bookmarks = response.data || [];
             if (!openPage) return;
 
-            var bookmark = utils.last(scope.bookmarks);
-            if (bookmark) {
-              scope.open(bookmark);
-            }
+            openBookmarkedPage();
           });
         };
         

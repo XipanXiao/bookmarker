@@ -22,23 +22,35 @@
     </script>
   </head>
   <body>
+    <select ng-options="sources[id].name for id in sourceIds"
+        ng-model="source.id" class="sutra-sources" ng-change="sourceChanged()">
+    </select>
     <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark">
     </div>
     <h1 class="center-align">深入经藏，智慧如海</h1>
     <input ng-show="false" type="text" ng-model="userId" id="user-id">
-    <div class="center-align">进度：已完成{{finished}}部，共{{books.length}}部</div>
+    <div class="center-align">
+      进度：已完成{{finished}}部，共{{books.length}}部
+      <span ng-if="!userId">(点右上角按钮登录可保存书签和进度)</span>
+    </div>
     <div class="progress-bar-container">
       <div class="progress-bar" style="width: {{finished*100.0/books.length}}%">
       </div>
     </div>
+    <div class="padded-element">
+      <label>输入经名过滤<input ng-model="nameFilter"></label>
+    </div>
     <div class="book-container" ng-class="{'logedIn': !!userId}">
-      <div class="book" ng-repeat="book in books"
+      <div class="book" ng-repeat="book in books | filter: {name: nameFilter}"
           ng-class="{'finished': book.finished}">
         <div class="book-name center-align" ng-click="open(book)">
           {{book.name}}
         </div>
-        <div class="serial center-align" ng-click="toggle(book)" title="标记完成">
-          <div class="center-align">{{book.serial | serial}}</div>
+        <div class="serial center-align" ng-click="toggle(book)"
+            title="{{book.finished ? '取消标记' : '标记完成'}}">
+          <div class="center-align">
+            {{book.volume | serial}}{{book.sub ? '-' + book.sub : ''}}
+          </div>
         </div>
       </div>
     </div>
