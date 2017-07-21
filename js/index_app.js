@@ -45,11 +45,21 @@ define('index_app', [
             function getProgresses() {
               return rpc.get_progress(scope.userId).then(function(response) {
                 var progresses = response.data;
+                if (utils.isEmpty(progresses)) {
+                  scope.finished = 0;
+                  return false;
+                }
+
+                var processed = 0;
                 scope.finished = utils.keys(progresses).length;
-                scope.books.forEach(function(book) {
+                for (var index in scope.books) {
+                  var book = scope.books[index];
                   var progress = progresses[book.id];
-                  book.finished = progress && progress.finished;
-                });
+                  if (!progress) continue;
+
+                  book.finished = progress.finished;
+                  if (++processed == scope.finished) break;
+                }
                 return progresses;
               });
             }
