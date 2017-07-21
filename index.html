@@ -39,10 +39,13 @@
       </div>
     </div>
     <div class="padded-element">
-      <label>输入经名过滤<input ng-model="nameFilter"></label>
+      <input placeholder="输入名字查找" ng-model="nameFilter">
+      <input type="radio" name="finished" ng-model="selectedState.name" value="全部">
+      <input type="radio" name="finished" ng-model="selectedState.name" value="已完成">
+      <input type="radio" name="finished" ng-model="selectedState.name" value="未完成">
     </div>
     <div class="book-container" ng-class="{'logedIn': !!userId}">
-      <div class="book" ng-repeat="book in books | filter: {name: nameFilter}"
+      <div class="book" ng-repeat="book in books | filter: {name: nameFilter, finished: finishedStates[selectedState.name]}"
           ng-class="{'finished': book.finished}">
         <div class="book-name center-align" ng-click="open(book)">
           {{book.name}}
