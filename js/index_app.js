@@ -18,10 +18,10 @@ define('index_app', [
             scope.open = function(book) {
               var url = 
                   (scope.source.face_base || scope.source.base) + book.url;
-              window.open('sutra.html?source={0}'.format(url), '_blank');
               if (scope.userId) {
                 updateRecents(book);
               }
+              window.location.href = 'sutra.html?source={0}'.format(url);
             };
             
             /// Inserts [book] to the front of the recents queue.

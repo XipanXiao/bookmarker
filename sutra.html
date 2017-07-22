@@ -5,6 +5,7 @@
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id"
         content="86770031009-j8bvlfegk1iiaus88rqll987oadmiuk5.apps.googleusercontent.com">
+    <title>我的佛经书签</title>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script type="text/javascript">
       function onSignIn(googleUser) {
@@ -24,6 +25,7 @@
   <body>
     <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark">
     </div>
+    <a class="center-aligned" href="index.html">首页</a>
     <div class="center flex">
       <input ng-show="false" type="text" ng-model="userId" id="user-id">
       <bookmarks ng-show="userId" user-id="userId" source="source">
