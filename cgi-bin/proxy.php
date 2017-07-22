@@ -3,10 +3,10 @@ include_once 'config.php';
 
 $ch = null;
 try {
-	$ch = curl_init();
+  $ch = curl_init();
 
   if (FALSE === $ch) {
-  	exit();
+    exit();
   }
 
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -19,7 +19,7 @@ try {
     
   $cookie_str = "";
   foreach ($_COOKIE as $key => $value) {
-  	if (strpos($key, $proxy_prefix) !== 0) continue;
+    if (strpos($key, $proxy_prefix) !== 0) continue;
     $cookie_str =
         $cookie_str . substr($key, strlen($proxy_prefix)) . "=" . $value . ";";
   }
@@ -30,17 +30,16 @@ try {
   if ($_SERVER ["REQUEST_METHOD"] == "GET") {
     $url = $_GET['url'];
   } else if ($_SERVER ["REQUEST_METHOD"] == "POST") {
-  	$url = $_POST['url'];
+    $url = $_POST['url'];
     curl_setopt($ch, CURLOPT_POST, 1);
-  	curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($_POST));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($_POST));
   }
 
   if (!$url) {
-  	curl_close($ch);
-  	exit();
+    curl_close($ch);
+    exit();
   }
 
-  $url = urldecode($url);
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
   curl_setopt($ch, CURLOPT_ENCODING ,"");
@@ -57,10 +56,22 @@ try {
   $header = substr($response, 0, $header_size);
   $body = substr($response, $header_size);
 
-  preg_match( "/<meta .*charset=\"(.+?)\"/i", $body, $encoding);
+  preg_match("/<meta .*\bcharset=\"([\w-]+)\"/i", $body, $encoding);
   
+  if (empty($encoding)) {
+    preg_match("/<meta .*\bcontent=\".*\bcharset=([\w-]+)\"/i", 
+        $body, $encoding);
+  } 
   if (!empty($encoding)) {
     header("Content-Type:text/html;charset=". $encoding[1]);
+  } elseif (!empty($header)) {
+    preg_match("/(Content-Type:\b.*\b)/i", $header, $contentType);
+    if (empty($contentType)) {
+      preg_match("/(Content-Type: \b.*\b)/i", $header, $contentType);
+    }
+    if (!empty($contentType)) {
+      header($contentType[1]);
+    }
   }
   echo $body;
 } catch(Exception $e) {
