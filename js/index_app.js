@@ -6,7 +6,7 @@ define('index_app', [
         return {
           link: function(scope) {
             scope.finished = 0;
-            scope.source = {id: 1};
+            scope.sourceId = 1;
             scope.state = 2;
             scope.recents = [];
             scope.progresses = [];
@@ -55,7 +55,7 @@ define('index_app', [
                 recents.reverse();
                 var recentSource = parseInt(recents[0].source);
                 if (recentSource != scope.source.id) {
-                  scope.source.id = recentSource;
+                  scope.sourceId = recentSource;
                   scope.sourceChanged();
                   return scope.recents = recents;
                 } else {
@@ -123,9 +123,9 @@ define('index_app', [
             }
             
             scope.sourceChanged = function() {
-              var id = scope.source.id;
+              var id = scope.sourceId;
               if (scope.sources) {
-                utils.mix_in(scope.source, scope.sources[id]);
+                scope.source = scope.sources[id];
               }
               scope.sourceRequests = 
                   utils.requestOneByOne([getSources, getSutraList]);

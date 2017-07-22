@@ -24,7 +24,7 @@
   </head>
   <body>
     <select ng-options="sources[id].name for id in sourceIds"
-        ng-model="source.id" class="sutra-sources" ng-change="sourceChanged()">
+        ng-model="sourceId" class="sutra-sources" ng-change="sourceChanged()">
     </select>
     <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark">
     </div>
@@ -40,9 +40,10 @@
     </div>
     <div class="padded-element">
       <div ng-if="recents.length">最近访问</div>
-      <div ng-if="recents.length" class="book-container">
-        <div ng-repeat="book in recents">
-          <book ng-if="book.name" book="book"></book>
+      <div ng-if="recents.length" class="book-container"
+          ng-class="{'logedIn': !!userId}">
+        <div ng-repeat="book in recents | filter: {source: sourceId}">
+          <book book="book"></book>
         </div>
       </div>
       <hr>
