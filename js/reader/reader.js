@@ -27,6 +27,7 @@ define('reader/reader',
           for (var i = 0; i < anchors.length; i++) {
             var anchor = anchors.item(i);
             anchor.href = utils.getProxyUrl(anchor.href);
+            anchor.target = '_self';
           }
         }
 

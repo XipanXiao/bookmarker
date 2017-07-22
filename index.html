@@ -39,10 +39,10 @@
       </div>
     </div>
     <div class="padded-element">
-      <div ng-if="recents.length">最近访问</div>
-      <div ng-if="recents.length" class="book-container"
+      <div ng-if="recentBooks.length">最近访问</div>
+      <div ng-if="recentBooks.length" class="book-container"
           ng-class="{'logedIn': !!userId}">
-        <div ng-repeat="book in recents | filter: {source: sourceId}">
+        <div ng-repeat="book in recentBooks | filter: {source: sourceId}">
           <book book="book"></book>
         </div>
       </div>

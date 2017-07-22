@@ -8,7 +8,11 @@ define('index_app', [
             scope.finished = 0;
             scope.sourceId = 1;
             scope.state = 2;
+            /// The recent records.
             scope.recents = [];
+            /// The book list built from recent records.
+            scope.recentBook = [];
+
             scope.progresses = [];
 
             scope.open = function(book) {
@@ -27,12 +31,14 @@ define('index_app', [
                 if (!response.data.updated) return;
 
                 for (var i in scope.recents) {
-                  if (scope.recents[i].id == book.id) {
+                  if (scope.recents[i].book_id == book.id) {
                     scope.recents.splice(i, 1);
                     break;
                   }
                 }
-                scope.recents.splice(0, 0, book);
+                scope.recents.splice(0, 0, 
+                    {book_id: book.id, source: book.source});
+                fillRecents(scope.recents);
               });
             }
             
@@ -63,14 +69,13 @@ define('index_app', [
                 }
               });
             }
-            
-            function fillRecents(recents) {
-              recents.forEach(function(recent) {
-                if (recent.name) return;
 
+            function fillRecents(recents) {
+              scope.recentBooks = [];
+              recents.forEach(function(recent) {
                 var book = scope.books[parseInt(recent.book_id)];
                 if (book) {
-                  utils.mix_in(recent, book);
+                  scope.recentBooks.push(book);
                 }
               });
               return scope.recents = recents;
