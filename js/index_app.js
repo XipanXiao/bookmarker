@@ -7,8 +7,7 @@ define('index_app', [
           link: function(scope) {
             scope.finished = 0;
             scope.source = {id: 1};
-            scope.finishedStates = {'全部': null, '已完成': 1, '未完成': 0};
-            scope.selectedState = {name: '全部'};
+            scope.state = 2;
 
             scope.open = function(book) {
               var url = 
@@ -61,7 +60,8 @@ define('index_app', [
                   var book = scope.books[progress.book_id];
                   book.finished = parseInt(progress.finished);
                 });
-                return scope.progresses = progresses;
+                scope.finished = progresses.length;
+                return progresses;
               });
             }
             
