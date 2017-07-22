@@ -373,10 +373,13 @@ define('utils', [], function() {
       },
       
       getProxyUrl: function(url) {
+        var proxy = '/cgi-bin/proxy.php/';
+        if (url.indexOf(proxy) >= 0) return url;
+
         var path = window.location.pathname || '/';
         index = path.lastIndexOf('/');
         root = path.substring(0, index);
-        return root + '/cgi-bin/proxy.php?url=' + encodeURI(url);
+        return root + proxy + url;
       },
 
       // Index of bit in the user.enroll_tasks bits.

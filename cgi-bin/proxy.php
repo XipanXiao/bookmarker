@@ -9,35 +9,23 @@ try {
     exit();
   }
 
+  $proxy = "/cgi-bin/proxy.php/";
+  $index = strpos($_SERVER[REQUEST_URI], $proxy);
+  $url = substr($_SERVER[REQUEST_URI], $index + strlen($proxy));
+  
+  if (empty($url)) {
+    curl_close($ch);
+    exit();
+  }
+
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_HEADER, 1);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
   curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-  
-  // All cookies with name like 'PROXY_xx' are from the proxied server.
-  $proxy_prefix = "PROXY_";
-    
-  $cookie_str = "";
-  foreach ($_COOKIE as $key => $value) {
-    if (strpos($key, $proxy_prefix) !== 0) continue;
-    $cookie_str =
-        $cookie_str . substr($key, strlen($proxy_prefix)) . "=" . $value . ";";
-  }
 
-  curl_setopt($ch, CURLOPT_COOKIE, $cookie_str);
-
-  $url = null;
-  if ($_SERVER ["REQUEST_METHOD"] == "GET") {
-    $url = $_GET['url'];
-  } else if ($_SERVER ["REQUEST_METHOD"] == "POST") {
-    $url = $_POST['url'];
+  if ($_SERVER ["REQUEST_METHOD"] == "POST") {
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($_POST));
-  }
-
-  if (!$url) {
-    curl_close($ch);
-    exit();
   }
 
   curl_setopt($ch, CURLOPT_URL, $url);

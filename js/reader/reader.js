@@ -23,31 +23,9 @@ define('reader/reader',
         }
 
         function redirectAnchors(doc) {
-          var head = doc.getElementsByTagName('head')[0];
-          var base = head.getElementsByTagName('base')[0];
-          if (!base) {
-            base = doc.createElement('base');
-            base.href = scope.url;
-            head.appendChild(base);
-          }
-          var a = doc.createElement('a');
-
           var anchors = doc.querySelectorAll('[href]');
           for (var i = 0; i < anchors.length; i++) {
             var anchor = anchors.item(i);
-            if (anchor.tagName.toLowerCase() == 'base') continue;
-
-            a.href = anchor.href;
-            anchor.href = a.href;
-            anchor.target = '';
-          }
-
-          base.parentElement.removeChild(base);
-
-          for (var i = 0; i < anchors.length; i++) {
-            var anchor = anchors.item(i);
-            if (anchor.tagName.toLowerCase() == 'base') continue;
-
             anchor.href = utils.getProxyUrl(anchor.href);
           }
         }
