@@ -1,0 +1,11 @@
+<div class="book" ng-class="{'finished': book.finished}">
+  <div class="book-name center-align" ng-click="book.open()">
+    {{book.name}}
+  </div>
+  <div class="serial center-align" ng-click="book.toggle()"
+      title="{{book.finished ? '取消标记' : '标记完成'}}">
+    <div class="center-align">
+      {{book.volume | volume}}{{book.sub ? '-' + book.sub : ''}}
+    </div>
+  </div>
+</div>

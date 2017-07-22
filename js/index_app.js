@@ -1,19 +1,40 @@
 define('index_app', [
-    'utils', 'services'], function() {
+    'book/book', 'utils', 'services'], function() {
 
-  angular.module('AppModule', ['UtilsModule', 'ServicesModule'])
+  angular.module('AppModule', ['BookModule', 'UtilsModule', 'ServicesModule'])
       .directive('body', function(utils, rpc) {
         return {
           link: function(scope) {
             scope.finished = 0;
             scope.source = {id: 1};
             scope.state = 2;
+            scope.recents = [];
+            scope.progresses = [];
 
             scope.open = function(book) {
               var url = 
                   (scope.source.face_base || scope.source.base) + book.url;
               window.open('sutra.html?source={0}'.format(url), '_blank');
+              if (scope.userId) {
+                updateRecents(book);
+              }
             };
+            
+            /// Inserts [book] to the front of the recents queue.
+            function updateRecents(book) {
+              rpc.update_recents(scope.userId, book.id, scope.source.id)
+              .then(function(response) {
+                if (!response.data.updated) return;
+
+                for (var i in scope.recents) {
+                  if (scope.recents[i].id == book.id) {
+                    scope.recents.splice(i, 1);
+                    break;
+                  }
+                }
+                scope.recents.splice(0, 0, book);
+              });
+            }
             
             scope.toggle = function(book) {
               var finished = book.finished ? 0 : 1;
@@ -25,6 +46,35 @@ define('index_app', [
                     }
                   });
             };
+            
+            function getRecents() {
+              return rpc.get_recents(scope.userId).then(function(response) {
+                var recents = response.data;
+                if (utils.isEmpty(recents)) return scope.recents = [];
+
+                recents.reverse();
+                var recentSource = parseInt(recents[0].source);
+                if (recentSource != scope.source.id) {
+                  scope.source.id = recentSource;
+                  scope.sourceChanged();
+                  return scope.recents = recents;
+                } else {
+                  return fillRecents(recents);
+                }
+              });
+            }
+            
+            function fillRecents(recents) {
+              recents.forEach(function(recent) {
+                if (recent.name) return;
+
+                var book = scope.books[parseInt(recent.book_id)];
+                if (book) {
+                  utils.mix_in(recent, book);
+                }
+              });
+              return scope.recents = recents;
+            }
 
             function getSources() {
               if (scope.sources) return utils.truePromise();
@@ -43,26 +93,33 @@ define('index_app', [
                 scope.total = 0;
                 response.data.forEach(function(book) {
                   scope.total++;
+                  book.open = function() {scope.open(book);};
+                  book.toggle = function() {scope.toggle(book);};
                   scope.books[book.id] = book;
                 });
+                fillRecents(scope.recents);
+                fillProgresses(scope.progresses);
                 return scope.books;
               });
             }
             
             function getProgresses() {
               return rpc.get_progress(scope.userId).then(function(response) {
-                var progresses = response.data;
-                if (utils.isEmpty(progresses)) {
-                  progresses = [];
-                }
-
-                progresses.forEach(function(progress) {
-                  var book = scope.books[progress.book_id];
-                  book.finished = parseInt(progress.finished);
-                });
-                scope.finished = progresses.length;
-                return progresses;
+                var progresses = 
+                    utils.isEmpty(response.data) ? [] : response.data;
+                return fillProgresses(progresses);
               });
+            }
+            
+            function fillProgresses(progresses) {
+              scope.finished = 0;
+              progresses.forEach(function(progress) {
+                var book = scope.books[progress.book_id];
+                if (!book) return;
+                book.finished = parseInt(progress.finished);
+                scope.finished++;
+              });
+              return scope.progresses = progresses;
             }
             
             scope.sourceChanged = function() {
@@ -77,27 +134,14 @@ define('index_app', [
             scope.$watch("userId", function(userId) {
               if (userId) {
                 scope.userId = userId;
-                if (scope.sourceRequests) {
-                  scope.sourceRequests.then(function(response) {
-                    getProgresses();
-                  });
-                } else {
-                  getProgresses();
-                }
+                scope.sourceRequests.then(function(response) {
+                  utils.requestOneByOne([getProgresses, getRecents]);
+                });
               }
             });
             
             scope.sourceChanged();
           }
-        };
-      }).filter('serial', function() {
-        return function(input) {
-          input = input || '';
-          var out = '';
-          for (var i = 0; i < 4 - input.length; i++) {
-            out += '0';
-          }
-          return out + input;
         };
       });
 

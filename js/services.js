@@ -52,6 +52,22 @@ define('services', [], function() {
             .format(sutraUrl, userId));
       },
       
+      get_recents: function(userId) {
+        return $http.get('{0}?rid=recents&user_id={1}'
+            .format(sutraUrl, userId));
+      },
+      
+      update_recents: function(userId, bookId, source) {
+        var data = {
+          rid: 'recents', 
+          user_id: userId, 
+          book_id: bookId, 
+          source: source
+        };
+        return http_form_post($http, $httpParamSerializerJQLike(data), 
+            sutraUrl);
+      },
+      
       update_progress: function(userId, bookId, finished) {
         var data = {rid: 'progress', user_id: userId, book_id: bookId, finished: finished};
         return http_form_post($http, $httpParamSerializerJQLike(data), 

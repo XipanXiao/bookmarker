@@ -49,6 +49,32 @@ function get_sutra_sources() {
   return keyed_by_id($medoo->select("sutra_sources", "*"));
 }
 
+function get_recents($user_id) {
+  global $medoo;
+
+  return $medoo->select("recents", "*",
+      ["user_id" => $user_id, "ORDER" => "ts"]);
+}
+
+function update_recents($user_id, $book_id, $source) {
+  global $medoo;
+
+  $sql = sprintf("INSERT INTO recents
+  		(user_id, sequence, sub_index, book_id, source)
+   select
+      '%s',
+      (coalesce(max(sequence), -1) + 1),
+  		(coalesce(max(sequence), -1) + 1) mod 20,
+      %d,
+  		%d
+   from recents
+      where user_id = '%s'
+      on duplicate key update
+  		   sequence = values(sequence), 
+         book_id = %d", $user_id, $book_id, $source, $user_id, $book_id);
+  return $medoo->query($sql);
+}
+
 if ($_SERVER ["REQUEST_METHOD"] == "GET") {
   $res_id = $_GET["rid"];
   if ($res_id == "sutra") {
@@ -57,6 +83,8 @@ if ($_SERVER ["REQUEST_METHOD"] == "GET") {
     $response = get_progress($_GET["user_id"]);
   } elseif ($res_id == "sources") {
     $response = get_sutra_sources();
+  } elseif ($res_id == "recents") {
+    $response = get_recents($_GET["user_id"]);
   }
 } else if ($_SERVER ["REQUEST_METHOD"] == "POST") {
   $res_id = $_POST["rid"];
@@ -64,8 +92,15 @@ if ($_SERVER ["REQUEST_METHOD"] == "GET") {
     $user_id = $_POST["user_id"];
     $book_id = $_POST["book_id"];
     $finished = $_POST["finished"];
-    $response = 
-        ["updated" => intval(update_progress($user_id, $book_id, $finished))];
+    $response = ["updated" => 
+        intval(update_progress($user_id, $book_id, $finished))];
+  } elseif ($res_id == "recents") {
+    $user_id = filter_input(INPUT_POST, "user_id",
+        FILTER_VALIDATE_REGEXP,
+        ["options" => ["regexp" => "/\b[\d]{21}\b/"]]);
+    $response = ["updated" => 
+        intval(update_recents($user_id, intval($_POST["book_id"]),
+        		intval($_POST["source"])))];
   }
 }
 
