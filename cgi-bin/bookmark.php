@@ -1,5 +1,6 @@
 <?php
 include_once 'connection.php';
+include_once 'users.php';
 
 $response = null;
 $medoo = get_medoo();
@@ -14,12 +15,16 @@ function get_db_error() {
 function getBookMarks($userId) {
   global $medoo;
   
+  $userId = get_user_id($medoo, $userId);
+  if (!user_id) return [];
+
   return $medoo->select("bookmarks", "*", ["user_id" => $userId]);
 }
 
 function updateBookmark($bookmark) {
   global $medoo;
 
+  $bookmark["user_id"] = get_user_id($medoo, $bookmark["user_id"], true);
   $where = ["AND" => 
       ["user_id" => $bookmark["user_id"], "url" => $bookmark["url"]]];
   $medoo->delete("bookmarks", $where);

@@ -79,9 +79,7 @@ define('bookmarks/bookmarks',
         function getUrl() {
           var iframe = frames['main_iframe'];
           var window = iframe.window;
-          var url = window.location.href;
-          var parts = url.split('url=');
-          return parts[1];
+          return utils.removeProxy(window.location.href);
         }
         
         function setUrl(url) {

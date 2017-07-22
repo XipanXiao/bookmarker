@@ -381,6 +381,13 @@ define('utils', [], function() {
         root = path.substring(0, index);
         return root + proxy + url;
       },
+      
+      removeProxy: function(url) {
+        var proxy = '/cgi-bin/proxy.php/';
+        var index = url.indexOf(proxy);
+        if (index < 0) return url;
+        return url.substring(index + proxy.length);
+      },
 
       // Index of bit in the user.enroll_tasks bits.
       // Indicating whether welcome letter is sent.
