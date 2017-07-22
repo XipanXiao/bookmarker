@@ -26,23 +26,29 @@ function keyed_by_id($results, $id_field = "id") {
   return $data;
 }
 
-function get_user_id($google_id) {
+function get_user_id($google_id, $create_new = false) {
   global $medoo;
   
-  return $medoo->get("users", "id", ["google_id" => $google_id]);
+  $data = ["google_id" => $google_id];
+  $user_id = $medoo->get("users", "id", ["google_id" => $google_id]);
+  if ($user_id || !$create_new) return $user_id;
+  
+  return $medoo->insert("users", $data);
 }
 
 function get_progress($user_id) {
   global $medoo;
 
   $user_id = get_user_id($user_id);
+  if (!$user_id) return [];
+
   return $medoo->select("progress", "*", ["user_id" => $user_id]);
 }
 
 function update_progress($user_id, $book_id, $finished) {
   global $medoo;
   
-  $user_id = get_user_id($user_id);
+  $user_id = get_user_id($user_id, true);
   $data = ["book_id" => $book_id, "user_id" => $user_id];
   $medoo->delete("progress", ["AND" => $data]);
   if (!intval($finished)) return 1;
@@ -61,6 +67,8 @@ function get_recents($user_id) {
   global $medoo;
 
   $user_id = get_user_id($user_id);
+  if (!$user_id) return [];
+
   return $medoo->select("recents", "*",
       ["user_id" => $user_id, "ORDER" => "ts"]);
 }
@@ -68,7 +76,7 @@ function get_recents($user_id) {
 function update_recents($user_id, $book_id, $source) {
   global $medoo;
 
-  $user_id = get_user_id($user_id);
+  $user_id = get_user_id($user_id, true);
   $sql = sprintf("INSERT INTO recents
   		(user_id, sequence, sub_index, book_id, source)
    select
