@@ -21,7 +21,7 @@ define('index_app', [
               if (scope.userId) {
                 updateRecents(book);
               }
-              window.location.href = 'sutra.html?source={0}'.format(url);
+              window.open('sutra.html?source={0}'.format(url), '_blank');
             };
             
             /// Inserts [book] to the front of the recents queue.
