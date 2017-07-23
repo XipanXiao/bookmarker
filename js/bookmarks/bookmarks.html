@@ -5,6 +5,7 @@
 </span>
 <div class="padded-element" ng-if="!collapsed">
   <input type="submit" value="Add bookmark" ng-click="create()">
+  <div>(请先选择一小段文字以标记书签位置)</div>
 </div>
 <div class="css-table odd-even" ng-if="!collapsed">
   <div ng-repeat="bookmark in bookmarks" class="css-table-row clickable">

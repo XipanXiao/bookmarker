@@ -1,3 +1,4 @@
 cd $OPENSHIFT_REPO_DIR;
 ./aggregate.sh
+unzip www.qldzj.com.cn.zip
 

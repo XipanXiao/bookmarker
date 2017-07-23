@@ -26,6 +26,8 @@ define('reader/reader',
           var anchors = doc.querySelectorAll('[href]');
           for (var i = 0; i < anchors.length; i++) {
             var anchor = anchors.item(i);
+            if (anchor.href.startsWith('javascript:')) continue;
+
             anchor.href = utils.getProxyUrl(anchor.href);
             anchor.target = '_self';
           }
