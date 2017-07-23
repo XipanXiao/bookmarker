@@ -80,7 +80,8 @@ function update_recents($user_id, $book_id, $source) {
       where user_id = %d
       on duplicate key update
   		   sequence = values(sequence), 
-         book_id = %d", $user_id, $book_id, $source, $user_id, $book_id);
+         book_id = %d,
+  		   ts = NOW()", $user_id, $book_id, $source, $user_id, $book_id);
   return $medoo->query($sql);
 }
 
