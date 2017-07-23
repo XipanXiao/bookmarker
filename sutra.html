@@ -23,11 +23,11 @@
     </script>
   </head>
   <body>
+    <input ng-show="false" type="text" ng-model="userId" id="user-id">
     <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark">
     </div>
     <div class="center-align"><a href="index.html">首页</a></div>
     <div class="center flex">
-      <input ng-show="false" type="text" ng-model="userId" id="user-id">
       <bookmarks ng-show="userId" user-id="userId" source="source">
       </bookmarks>
       <reader></reader>

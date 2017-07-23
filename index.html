@@ -26,10 +26,10 @@
     <select ng-options="sources[id].name for id in sourceIds"
         ng-model="sourceId" class="sutra-sources" ng-change="sourceChanged()">
     </select>
+    <input ng-show="false" type="text" ng-model="userId" id="user-id">
     <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark">
     </div>
     <h1 class="center-align">深入经藏，智慧如海</h1>
-    <input ng-show="false" type="text" ng-model="userId" id="user-id">
     <div class="center-align">
       进度：已完成{{finished}}部，共{{total}}部
       <span ng-if="!userId">(点右上角按钮登录可保存书签和进度)</span>
