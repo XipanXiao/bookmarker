@@ -9,14 +9,26 @@ define('bookmarks/bookmarks',
         userId: '='
       },
       link: function(scope) {
+        var bookMarkPromise;
+
         scope.$watch('userId', function(userId) {
           if (userId) {
-            reload(true);
+            getBookmarks().then(function() {
+              openBookmarkedPage();
+            });
           }
         });
         scope.$watch('source', function(source) {
-          if (source) {
-            reload(true);
+          if (!source) return;
+
+          if (bookMarkPromise) {
+            bookMarkPromise.then(function() {
+              if (!openBookmarkedPage()) {
+                setUrl(source.url);
+              }
+            });
+          } else {
+            setUrl(source.url);
           }
         });
 
@@ -36,21 +48,14 @@ define('bookmarks/bookmarks',
           var bookmark = findBookmark();
           if (bookmark) {
             scope.open(bookmark);
-          } else if (scope.source) {
-            setUrl(scope.source.url);
+            return bookmark;
           }
         }
 
-        function reload(openPage) {
-          if (!scope.userId) {
-            openBookmarkedPage();
-            return;
-          }
-          rpc.get_bookmarks(scope.userId).then(function(response) {
-            scope.bookmarks = response.data || [];
-            if (!openPage) return;
-
-            openBookmarkedPage();
+        function getBookmarks() {
+          return bookMarkPromise = 
+              rpc.get_bookmarks(scope.userId).then(function(response) {
+            return scope.bookmarks = response.data || [];
           });
         };
         
@@ -143,7 +148,7 @@ define('bookmarks/bookmarks',
           };
           rpc.create_bookmark(bookmark).then(function(response) {
             if (response.data.updated) {
-              reload();
+              getBookmarks();
             }
           });
         };
