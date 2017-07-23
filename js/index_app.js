@@ -19,16 +19,19 @@ define('index_app', [
               var url = 
                   (scope.source.face_base || scope.source.base) + book.url;
               if (scope.userId) {
-                updateRecents(book);
+                updateRecents(book).then(function() {
+                  location.href = 'sutra.html?source={0}'.format(url);
+                });
+              } else {
+                location.href = 'sutra.html?source={0}'.format(url);
               }
-              location.href = 'sutra.html?source={0}'.format(url);
             };
             
             /// Inserts [book] to the front of the recents queue.
             function updateRecents(book) {
-              rpc.update_recents(scope.userId, book.id, scope.source.id)
+              return rpc.update_recents(scope.userId, book.id, scope.source.id)
               .then(function(response) {
-                if (!response.data.updated) return;
+                if (!response.data.updated) return scope.recents;
 
                 for (var i in scope.recents) {
                   if (scope.recents[i].book_id == book.id) {
@@ -38,7 +41,7 @@ define('index_app', [
                 }
                 scope.recents.splice(0, 0, 
                     {book_id: book.id, source: book.source});
-                fillRecents(scope.recents);
+                return fillRecents(scope.recents);
               });
             }
             
