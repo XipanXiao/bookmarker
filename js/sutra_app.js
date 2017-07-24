@@ -51,6 +51,18 @@ define('sutra_app', [
                 }
               }
             });
+
+            function login() {
+              return rpc.login(scope.idToken).then(function(response) {
+                return scope.userId = response.data.user_id;
+              });
+            }
+
+            scope.$watch("idToken", function(idToken) {
+              if (idToken) {
+                login();
+              }
+            });
           }
         };
       });

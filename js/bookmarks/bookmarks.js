@@ -54,7 +54,7 @@ define('bookmarks/bookmarks',
 
         function getBookmarks() {
           return bookMarkPromise = 
-              rpc.get_bookmarks(scope.userId).then(function(response) {
+              rpc.get_bookmarks().then(function(response) {
             return scope.bookmarks = response.data || [];
           });
         };
@@ -141,7 +141,6 @@ define('bookmarks/bookmarks',
 
         scope.create = function() {
           var bookmark = {
-            user_id: scope.userId,
             url: getUrl(),
             title: getTitle(),
             anchor: getSelectionText()

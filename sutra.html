@@ -9,9 +9,12 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script type="text/javascript">
       function onSignIn(googleUser) {
-        var profile = googleUser.getBasicProfile();
+        var name = googleUser.getBasicProfile().getName();
+        document.querySelector('#user-name').innerHTML = name;
+
+        var id_token = googleUser.getAuthResponse().id_token;
         var input = document.querySelector('#user-id');
-        input.value = profile.getId();
+        input.value = id_token;
         if ("createEvent" in document) {
           var evt = document.createEvent("HTMLEvents");
           evt.initEvent("change", false, true);
@@ -23,7 +26,8 @@
     </script>
   </head>
   <body>
-    <input ng-show="false" type="text" ng-model="userId" id="user-id">
+    <input ng-show="false" type="text" ng-model="idToken" id="user-id">
+    <div id="user-name"></div>
     <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark">
     </div>
     <div class="center-align"><a href="index.html">首页</a></div>

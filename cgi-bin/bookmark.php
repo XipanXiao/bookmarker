@@ -1,6 +1,5 @@
 <?php
 include_once 'connection.php';
-include_once 'users.php';
 
 $response = null;
 $medoo = get_medoo();
@@ -12,10 +11,10 @@ function get_db_error() {
   return empty($errors) ? '' : $errors[2];
 }
 
-function getBookMarks($userId) {
+function getBookMarks() {
   global $medoo;
   
-  $userId = get_user_id($medoo, $userId);
+  $userId = $_SESSION["user_id"];
   if (!user_id) return [];
 
   return $medoo->select("bookmarks", "*", ["user_id" => $userId]);
@@ -24,7 +23,7 @@ function getBookMarks($userId) {
 function updateBookmark($bookmark) {
   global $medoo;
 
-  $bookmark["user_id"] = get_user_id($medoo, $bookmark["user_id"], true);
+  $bookmark["user_id"] = $_SESSION["user_id"];
   $where = ["AND" => 
       ["user_id" => $bookmark["user_id"], "url" => $bookmark["url"]]];
   $medoo->delete("bookmarks", $where);
@@ -38,7 +37,7 @@ function deleteBookmark($id) {
 }
 
 if ($_SERVER ["REQUEST_METHOD"] == "GET") {
-  $response = getBookMarks($_GET["user_id"]);
+  $response = getBookMarks();
 } else if ($_SERVER ["REQUEST_METHOD"] == "POST") {
   $response = ["updated" => intval(updateBookmark($_POST))];
 } elseif ($_SERVER ["REQUEST_METHOD"] == "DELETE") {

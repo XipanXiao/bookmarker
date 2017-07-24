@@ -1,6 +1,5 @@
 <?php
 include_once 'connection.php';
-include_once 'users.php';
 
 $response = null;
 $medoo = get_medoo();
@@ -27,19 +26,21 @@ function keyed_by_id($results, $id_field = "id") {
   return $data;
 }
 
-function get_progress($user_id) {
+function get_progress() {
   global $medoo;
 
-  $user_id = get_user_id($medoo, $user_id);
+  $user_id = $_SESSION["user_id"];
   if (!$user_id) return [];
 
   return $medoo->select("progress", "*", ["user_id" => $user_id]);
 }
 
-function update_progress($user_id, $book_id, $finished) {
+function update_progress($book_id, $finished) {
   global $medoo;
   
-  $user_id = get_user_id($medoo, $user_id, true);
+  $user_id = $_SESSION["user_id"];
+  if (!$user_id) return [];
+
   $data = ["book_id" => $book_id, "user_id" => $user_id];
   $medoo->delete("progress", ["AND" => $data]);
   if (!intval($finished)) return 1;
@@ -54,20 +55,22 @@ function get_sutra_sources() {
   return keyed_by_id($medoo->select("sutra_sources", "*"));
 }
 
-function get_recents($user_id) {
+function get_recents() {
   global $medoo;
 
-  $user_id = get_user_id($medoo, $user_id);
+  $user_id = $_SESSION["user_id"];
   if (!$user_id) return [];
 
   return $medoo->select("recents", "*",
       ["user_id" => $user_id, "ORDER" => "ts"]);
 }
 
-function update_recents($user_id, $book_id, $source) {
+function update_recents($book_id, $source) {
   global $medoo;
 
-  $user_id = get_user_id($medoo, $user_id, true);
+  $user_id = $_SESSION["user_id"];
+  if (!$user_id) return [];
+
   $sql = sprintf("INSERT INTO recents
   		(user_id, sequence, sub_index, book_id, source)
    select
@@ -90,27 +93,22 @@ if ($_SERVER ["REQUEST_METHOD"] == "GET") {
   if ($res_id == "sutra") {
     $response = get_sutra_list($_GET["source"]);
   } elseif ($res_id == "progress") {
-    $response = get_progress($_GET["user_id"]);
+    $response = get_progress();
   } elseif ($res_id == "sources") {
     $response = get_sutra_sources();
   } elseif ($res_id == "recents") {
-    $response = get_recents($_GET["user_id"]);
+    $response = get_recents();
   }
 } else if ($_SERVER ["REQUEST_METHOD"] == "POST") {
   $res_id = $_POST["rid"];
   if ($res_id == "progress") {
-    $user_id = $_POST["user_id"];
     $book_id = $_POST["book_id"];
     $finished = $_POST["finished"];
     $response = ["updated" => 
-        intval(update_progress($user_id, $book_id, $finished))];
+        intval(update_progress($book_id, $finished))];
   } elseif ($res_id == "recents") {
-    $user_id = filter_input(INPUT_POST, "user_id",
-        FILTER_VALIDATE_REGEXP,
-        ["options" => ["regexp" => "/\b[\d]{21}\b/"]]);
-    $response = ["updated" => 
-        intval(update_recents($user_id, intval($_POST["book_id"]),
-        		intval($_POST["source"])))];
+    $response = ["updated" => intval(update_recents(intval($_POST["book_id"]),
+        intval($_POST["source"])))];
   }
 }
 

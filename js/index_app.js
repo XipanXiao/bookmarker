@@ -26,10 +26,10 @@ define('index_app', [
                 location.href = 'sutra.html?source={0}'.format(url);
               }
             };
-            
+
             /// Inserts [book] to the front of the recents queue.
             function updateRecents(book) {
-              return rpc.update_recents(scope.userId, book.id, scope.source.id)
+              return rpc.update_recents(book.id, scope.source.id)
               .then(function(response) {
                 if (!response.data.updated) return scope.recents;
 
@@ -47,17 +47,16 @@ define('index_app', [
             
             scope.toggle = function(book) {
               var finished = book.finished ? 0 : 1;
-              rpc.update_progress(scope.userId, book.id, finished)
-                  .then(function(response) {
-                    if (response.data.updated) {
-                      book.finished = finished;
-                      scope.finished += finished ? 1 : -1; 
-                    }
-                  });
+              rpc.update_progress(book.id, finished).then(function(response) {
+                if (response.data.updated) {
+                  book.finished = finished;
+                  scope.finished += finished ? 1 : -1; 
+                }
+              });
             };
-            
+
             function getRecents() {
-              return rpc.get_recents(scope.userId).then(function(response) {
+              return rpc.get_recents().then(function(response) {
                 var recents = response.data;
                 if (utils.isEmpty(recents)) return scope.recents = [];
 
@@ -112,7 +111,7 @@ define('index_app', [
             }
             
             function getProgresses() {
-              return rpc.get_progress(scope.userId).then(function(response) {
+              return rpc.get_progress().then(function(response) {
                 var progresses = 
                     utils.isEmpty(response.data) ? [] : response.data;
                 return fillProgresses(progresses);
@@ -139,11 +138,16 @@ define('index_app', [
                   utils.requestOneByOne([getSources, getSutraList]);
             };
 
-            scope.$watch("userId", function(userId) {
-              if (userId) {
-                scope.userId = userId;
+            function login() {
+              return rpc.login(scope.idToken).then(function(response) {
+                return scope.userId = response.data.user_id;
+              });
+            }
+
+            scope.$watch("idToken", function(idToken) {
+              if (idToken) {
                 scope.sourceRequests.then(function(response) {
-                  utils.requestOneByOne([getProgresses, getRecents]);
+                  utils.requestOneByOne([login, getProgresses, getRecents]);
                 });
               }
             });

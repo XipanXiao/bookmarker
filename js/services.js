@@ -24,9 +24,8 @@ define('services', [], function() {
   return angular.module('ServicesModule', []).factory('rpc', function($http, 
       $httpParamSerializerJQLike) {
     return {
-      get_bookmarks: function(userId) {
-        var url = '{0}?user_id={1}'.format(bookmarkUrl, userId);
-        return $http.get(url);
+      get_bookmarks: function() {
+        return $http.get(bookmarkUrl);
       },
     
       create_bookmark: function(bookmark) {
@@ -46,32 +45,35 @@ define('services', [], function() {
         return $http.get('{0}?rid=sutra&source={1}'
             .format(sutraUrl, source || 1));
       },
-      
-      get_progress: function(userId) {
-        return $http.get('{0}?rid=progress&user_id={1}'
-            .format(sutraUrl, userId));
+
+      get_progress: function() {
+        return $http.get('{0}?rid=progress'.format(sutraUrl));
+      },
+
+      get_recents: function() {
+        return $http.get('{0}?rid=recents'.format(sutraUrl));
       },
       
-      get_recents: function(userId) {
-        return $http.get('{0}?rid=recents&user_id={1}'
-            .format(sutraUrl, userId));
-      },
-      
-      update_recents: function(userId, bookId, source) {
+      update_recents: function(bookId, source) {
         var data = {
           rid: 'recents', 
-          user_id: userId, 
           book_id: bookId, 
           source: source
         };
         return http_form_post($http, $httpParamSerializerJQLike(data), 
             sutraUrl);
       },
-      
-      update_progress: function(userId, bookId, finished) {
-        var data = {rid: 'progress', user_id: userId, book_id: bookId, finished: finished};
+
+      update_progress: function(bookId, finished) {
+        var data = {rid: 'progress', book_id: bookId, finished: finished};
         return http_form_post($http, $httpParamSerializerJQLike(data), 
             sutraUrl);
+      },
+      
+      login: function(id_token) {
+        var data = {id_token: id_token};
+        return http_form_post($http, $httpParamSerializerJQLike(data), 
+            'cgi-bin/users.php');
       }
     };
   });
