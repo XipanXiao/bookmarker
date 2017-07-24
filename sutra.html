@@ -2,34 +2,12 @@
   <head>
     <link rel="stylesheet" type="text/css" href="style.css"></link>
     <meta charset="utf-8">
-    <meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id"
-        content="86770031009-j8bvlfegk1iiaus88rqll987oadmiuk5.apps.googleusercontent.com">
     <title>我的佛经书签</title>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <script type="text/javascript">
-      function onSignIn(googleUser) {
-        var name = googleUser.getBasicProfile().getName();
-        document.querySelector('#user-name').innerHTML = name;
-
-        var id_token = googleUser.getAuthResponse().id_token;
-        var input = document.querySelector('#user-id');
-        input.value = id_token;
-        if ("createEvent" in document) {
-          var evt = document.createEvent("HTMLEvents");
-          evt.initEvent("change", false, true);
-          input.dispatchEvent(evt);
-        } else {
-          input.fireEvent("onchange");
-        }
-      }
     </script>
   </head>
   <body>
-    <input ng-show="false" type="text" ng-model="idToken" id="user-id">
-    <div id="user-name"></div>
-    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark">
-    </div>
+    <login-button></login-button>
     <div class="center-align"><a href="index.html">首页</a></div>
     <div class="center flex">
       <bookmarks ng-show="userId" user-id="userId" source="source">

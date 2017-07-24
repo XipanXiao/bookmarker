@@ -451,17 +451,9 @@ address-filter {
   cursor: pointer;
 }
 
-#user-name {
+login-button {
   position: absolute;
   right: 8px;
-  top: 4px;
-}
-
-.g-signin2 {
-  background-color: inherit;
-  position: absolute;
-  right: 8px;
-  top: 24px;
 }
 
 .center-align {

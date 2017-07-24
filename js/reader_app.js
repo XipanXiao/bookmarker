@@ -1,24 +1,18 @@
 define('reader_app', [
     'bookmarks/bookmarks',
+    'login_button/login_button',
     'reader/reader',
     'utils', 'services'], function() {
 
   angular.module('AppModule', ['BookmarksModule',
+      'LoginButtonModule',
       'ReaderModule',
       'UtilsModule', 'ServicesModule'])
       .directive('body', function(utils, rpc) {
         return {
           link: function(scope) {
-            function login() {
-              return rpc.login(scope.idToken).then(function(response) {
-                return scope.userId = response.data.user_id;
-              });
-            }
-
-            scope.$watch("idToken", function(idToken) {
-              if (idToken) {
-                login();
-              }
+            scope.$on("user-id", function(userId) {
+              scope.userId = userId;
             });
           }
         };

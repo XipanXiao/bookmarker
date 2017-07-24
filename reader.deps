@@ -4,4 +4,5 @@ js/utils.js
 js/services.js
 js/reader/reader.js
 js/bookmarks/bookmarks.js
+js/login_button/login_button.js
 js/reader_app.js

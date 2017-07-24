@@ -1,7 +1,8 @@
 define('index_app', [
-    'book/book', 'utils', 'services'], function() {
+    'book/book', 'login_button/login_button', 'utils', 'services'], function() {
 
-  angular.module('AppModule', ['BookModule', 'UtilsModule', 'ServicesModule'])
+  angular.module('AppModule', ['BookModule', 
+      'LoginButtonModule', 'UtilsModule', 'ServicesModule'])
       .directive('body', function(utils, rpc) {
         return {
           link: function(scope) {
@@ -138,18 +139,11 @@ define('index_app', [
                   utils.requestOneByOne([getSources, getSutraList]);
             };
 
-            function login() {
-              return rpc.login(scope.idToken).then(function(response) {
-                return scope.userId = response.data.user_id;
+            scope.$on("user-id", function(userId) {
+              scope.userId = userId;
+              scope.sourceRequests.then(function(response) {
+                utils.requestOneByOne([getProgresses, getRecents]);
               });
-            }
-
-            scope.$watch("idToken", function(idToken) {
-              if (idToken) {
-                scope.sourceRequests.then(function(response) {
-                  utils.requestOneByOne([login, getProgresses, getRecents]);
-                });
-              }
             });
             
             scope.sourceChanged();

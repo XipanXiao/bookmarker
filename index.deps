@@ -3,4 +3,5 @@ js/angular.min.js
 js/utils.js
 js/services.js
 js/book/book.js
+js/login_button/login_button.js
 js/index_app.js
