@@ -11,6 +11,12 @@ function get_db_error() {
   return empty($errors) ? '' : $errors[2];
 }
 
+function get_categories() {
+	global $medoo;
+	
+	return keyed_by_id($medoo->select("categories", "*"));
+}
+
 function get_sutra_list($source) {
   global $medoo;
   
@@ -90,7 +96,9 @@ function update_recents($book_id, $source) {
 
 if ($_SERVER ["REQUEST_METHOD"] == "GET") {
   $res_id = $_GET["rid"];
-  if ($res_id == "sutra") {
+  if ($res_id == "categories") {
+  	$response = get_categories();
+  } elseif ($res_id == "sutra") {
     $response = get_sutra_list($_GET["source"]);
   } elseif ($res_id == "progress") {
     $response = get_progress();

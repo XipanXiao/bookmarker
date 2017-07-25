@@ -41,6 +41,10 @@ define('services', [], function() {
         return $http.get('{0}?rid=sources'.format(sutraUrl));
       },
       
+      get_categories: function() {
+        return $http.get('{0}?rid=categories'.format(sutraUrl));
+      },
+
       get_sutra_list: function(source) {
         return $http.get('{0}?rid=sutra&source={1}'
             .format(sutraUrl, source || 1));

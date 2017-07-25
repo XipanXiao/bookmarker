@@ -93,6 +93,17 @@ define('index_app', [
                 return scope.sources = response.data;
               });
             }
+            
+            function getCategories() {
+              return rpc.get_categories().then(function(response) {
+                utils.forEach(response.data, function(category) {
+                  category.expanded = false;
+                  category.books = [];
+                });
+                response.data[1].expanded = true;
+                return scope.categories = response.data;
+              });
+            }
 
             function getSutraList() {
               return rpc.get_sutra_list(scope.source.id)
@@ -104,6 +115,7 @@ define('index_app', [
                   book.open = function() {scope.open(book);};
                   book.toggle = function() {scope.toggle(book);};
                   scope.books[book.id] = book;
+                  scope.categories[book.category].books.push(book);
                 });
                 fillRecents(scope.recents);
                 fillProgresses(scope.progresses);
@@ -135,8 +147,8 @@ define('index_app', [
               if (scope.sources) {
                 scope.source = scope.sources[id];
               }
-              scope.sourceRequests = 
-                  utils.requestOneByOne([getSources, getSutraList]);
+              scope.sourceRequests = utils.requestOneByOne([getSources,
+                  getCategories, getSutraList]);
             };
 
             scope.$on("user-id", function(userId) {

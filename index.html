@@ -42,10 +42,19 @@
         未完成
       </label>
     </div>
-    <div class="book-container" ng-class="{'logedIn': !!userId}">
-      <div ng-repeat="book in books | filter: {name: nameFilter}"
-          ng-if="state == 2 || (book.finished || 0) == state">
-          <book book="book"></book>
+    <div ng-repeat="(id, group) in categories">
+      <div ng-if="group.books.length" class="padded-element">
+        <div ng-click="group.expanded = !group.expanded" class="clickable">
+          <h2>{{group.name}}</h2>
+          <hr>
+        </div>
+        <div ng-if="group.expanded || nameFilter" class="book-container"
+            ng-class="{'logedIn': !!userId}">
+          <div ng-repeat="book in group.books | filter: {name: nameFilter}"
+              ng-if="state == 2 || (book.finished || 0) == state">
+              <book book="book"></book>
+          </div>
+        </div>
       </div>
     </div>
     <script type="text/javascript" src="index.js?tag=201707120800"></script>
