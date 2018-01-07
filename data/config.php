@@ -12,5 +12,11 @@
     "dbname": "bookmarker",
     "session_path": "${OPENSHIFT_TMP_DIR}"
   },
+  "sutra-sutra.1d35.starter-us-east-1.openshiftapps.com": {
+    "servername": "${MYSQL_SERVICE_HOST}",
+    "username": "${MYSQL_USER}",
+    "password": "${MYSQL_PASSWORD}",
+    "dbname": "${MYSQL_DATABASE}"
+  },
   "closing": "*/?>"
 }
