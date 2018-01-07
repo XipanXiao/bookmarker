@@ -9,8 +9,8 @@ define('services', [], function() {
     };
   }
 
-  var bookmarkUrl = 'cgi-bin/bookmark.php';
-  var sutraUrl = 'cgi-bin/sutra.php';
+  var bookmarkUrl = 'php/bookmark.php';
+  var sutraUrl = 'php/sutra.php';
   
   function http_form_post($http, data, url) {
     return $http({
@@ -77,7 +77,7 @@ define('services', [], function() {
       login: function(id_token) {
         var data = {id_token: id_token};
         return http_form_post($http, $httpParamSerializerJQLike(data), 
-            'cgi-bin/users.php');
+            'php/users.php');
       }
     };
   });

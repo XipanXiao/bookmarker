@@ -373,7 +373,7 @@ define('utils', [], function() {
       },
       
       getProxyUrl: function(url) {
-        var proxy = '/cgi-bin/proxy.php/';
+        var proxy = '/php/proxy.php/';
         if (url.indexOf(proxy) >= 0 || url.startsWith(location.origin)) {
           return url;
         }
@@ -385,7 +385,7 @@ define('utils', [], function() {
       },
       
       removeProxy: function(url) {
-        var proxy = '/cgi-bin/proxy.php/';
+        var proxy = '/php/proxy.php/';
         var index = url.indexOf(proxy);
         if (index < 0) return url;
         return url.substring(index + proxy.length);
