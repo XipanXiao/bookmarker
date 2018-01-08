@@ -17,8 +17,8 @@ function get_user_id($google_id, $create_new = false) {
 
 /// Authenticates the client POST id_token, returns the internal user id.
 function authenticate($id_token) {
-  $CLIENT_ID = 
-      "86770031009-j8bvlfegk1iiaus88rqll987oadmiuk5.apps.googleusercontent.com";
+  $CLIENT_ID =
+      "513369351296-c0k8jf39t1kvrhfrj9i49ht11ndfu213.apps.googleusercontent.com";	
   $client = new Google_Client(['client_id' => $CLIENT_ID]);
   $payload = $client->verifyIdToken($id_token);
   if ($payload) {
