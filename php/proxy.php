@@ -9,7 +9,7 @@ try {
     exit();
   }
 
-  $proxy = "/cgi-bin/proxy.php/";
+  $proxy = "/php/proxy.php/";
   $index = strpos($_SERVER[REQUEST_URI], $proxy);
   $url = substr($_SERVER[REQUEST_URI], $index + strlen($proxy));
   
