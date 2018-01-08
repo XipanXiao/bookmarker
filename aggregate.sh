@@ -6,7 +6,7 @@ for f in `cat reader.deps`; do cat $f >> reader.js; done;
 rm -f sutra.js
 for f in `cat sutra.deps`; do cat $f >> sutra.js; done;
 
-if test -d www.qldzj.com.cn; then echo "done"; else unzip www.qldjz.com.cn.zip; fi 
+if test -d www.qldzj.com.cn; then echo "done"; else unzip ./www.qldjz.com.cn.zip; fi 
 
 # echo "RewriteEngine on" > .htaccess
 # echo "RewriteCond %{HTTP:X-Forwarded-Proto} !https" >> .htaccess
