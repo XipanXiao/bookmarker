@@ -18,7 +18,7 @@ define('login_button/login_button', ['services'], function() {
         
         gapi.load('auth2', function () {
           var auth2 = gapi.auth2.init({
-            client_id: '86770031009-j8bvlfegk1iiaus88rqll987oadmiuk5.apps.googleusercontent.com',
+            client_id: '513369351296-c0k8jf39t1kvrhfrj9i49ht11ndfu213.apps.googleusercontent.com',
             cookiepolicy: 'single_host_origin',
             scope: 'profile email'
           });

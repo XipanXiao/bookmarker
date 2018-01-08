@@ -16,7 +16,7 @@
     "servername": "${MYSQL_SERVICE_HOST}",
     "username": "${MYSQL_USER}",
     "password": "${MYSQL_PASSWORD}",
-    "dbname": "${MYSQL_DATABASE}"
+    "dbname": "bookmarker"
   },
   "closing": "*/?>"
 }
