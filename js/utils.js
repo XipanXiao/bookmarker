@@ -374,7 +374,8 @@ define('utils', [], function() {
       
       getProxyUrl: function(url) {
         var proxy = '/php/proxy.php/';
-        if (url.indexOf(proxy) >= 0 || url.startsWith(location.origin)) {
+        if (url.indexOf(proxy) >= 0 || url.startsWith(location.origin) ||
+            url.startsWith('./')) {
           return url;
         }
 
