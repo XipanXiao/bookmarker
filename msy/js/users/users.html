@@ -1,0 +1,37 @@
+<span class="padded-element">人数：{{userCount()}}</span>
+<iron-icon icon="add-circle" class="add-icon clickable" ng-click="addUser()"
+    title="新建客户">
+</iron-icon>
+<div class="users flex" ng-if="isNotEmpty">
+  <div class="css-table section odd-even">
+    <div class="css-table-row header">
+      <div class="css-table-cell"><strong>姓名</strong></div>
+      <div class="css-table-cell"><strong>邮件</strong></div>
+      <div class="css-table-cell"><strong>电话</strong></div>
+      <div class="css-table-cell"><strong>微信</strong></div>
+      <div class="css-table-cell"><strong>级别</strong></div>
+      <div class="css-table-cell"><strong></strong></div>
+    </div>
+    <div ng-repeat="user in users" class="css-table-row selectable users deletable"
+        ng-click="showInfo(user, $index)"
+        ng-class="{'selected': selected(user)}">
+      <div class="css-table-cell compact-name-field">{{user.name}}</div>
+      <div class="css-table-cell email">{{user.email}}</div>
+      <div class="css-table-cell">{{user.phone}}</div>
+      <div class="css-table-cell comments">{{user.im}}</div>
+      <div class="css-table-cell">
+        <select ng-options="levelLabels[level] for level in [0, 1, 2, 3, 4, 5, 6]"
+            ng-model="user.level" disabled>
+        </select>
+      </div>
+      <div class="css-table-cell">
+        <iron-icon icon="icons:delete" title="删除" ng-click="remove(user)"
+            class="selectable delete-button">
+        </iron-icon>
+      </div>
+    </div>
+  </div>
+  <user-editor ng-if="editingUser" user="editingUser" class="padded-element compact-user"
+      style="margin-top: {{selectedTop}}px;" class-mates="userNames">
+  </user-editor>
+</div>

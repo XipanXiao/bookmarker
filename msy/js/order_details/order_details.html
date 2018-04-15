@@ -1,0 +1,139 @@
+<link rel="import" href="bower_components/iron-icons/editor-icons.html">
+<link rel="import" href="bower_components/iron-icons/communication-icons.html">
+<div class="css-table order-details-header">
+  <div class="css-table-row deletable">
+    <div class="css-table-cell">
+      <div>订单日期</div>
+      <div>{{order.created_time}}</div>
+      <div ng-switch="admin" class="padded-element">
+        <label ng-switch-when="true">订单状态: 
+          <select ng-model="order.status"
+              ng-options="statusLabels[value] for value in [-1, 0, 1, 3]"
+              ng-change="onUpdate()">
+          </select>
+        </label>
+        <span ng-switch-default>订单状态: {{statusLabels[order.status]}}</span>
+      </div>
+      <div>总数: {{order.count}}</div>
+      <div class="desc-container">
+        <iron-icon icon="description" ng-click="showDesc = !showDesc"
+            title="微信消息" class="clickable">
+        </iron-icon>
+        <div ng-if="showDesc" class="wechat-msg section">
+（<span ng-repeat="item in order.items">{{item.count}}{{item.unit || '个'}}{{item.short_name || item.name}}，</span>
+共{{order.count}}个产品）地址：{{order.street}} {{order.name}} {{order.zip}} {{order.phone}}
+        </div>
+      </div>
+      <input ng-if="!order.status && hasSelection()" type="button" 
+          value="将所选项拆分到新订单" ng-click="onSplit()">
+    </div>
+    <div class="css-table-cell">
+      <div>金额: ${{order.sub_total}}</div>
+      <div>预计国际运费: ${{order.int_shipping_estmt}}</div>
+      <div>实际国际运费: ${{order.int_shipping}}</div>
+      <div>美国国内运费: ${{order.shipping}}</div>
+      <div>合计: ${{order.grand_total}}</div>
+      <div>已付: ${{order.paid}}</div>
+      <div>
+        <strong>Balance: ${{order.balance}}</strong>
+      </div>
+      <label>修改<input type="checkbox" ng-model="order.editing"></label>
+      <div ng-if="order.editing">
+        <div ng-if="admin">          
+          <div><label>运费: $<input ng-model="order.shipping"></label></div>
+          <div>
+            <label>快递单号:
+              <input ng-model="order.usps_track_id">
+            </label>
+          </div>
+        </div>
+        <div><label>已付: $<input ng-model="order.paid"></label></div>
+        <input type="button" value="确认修改" ng-click="onUpdate()">
+      </div>
+    </div>
+    <div class="css-table-cell">
+      <address-editor user="order" with-contact="true"></address-editor>
+      <a ng-if="order.usps_track_id" target="_blank"
+          href="http://www.kjkd.com/customer/oddtracking?txtbill={{order.usps_track_id}}">
+        包裹跟踪（快捷）
+      </a>
+      <a ng-if="order.usps_track_id && order.usps_track_id.startsWith('535')" target="_blank"
+          href="http://www.zto.com/GuestService/BillNew?txtBill={{order.usps_track_id}}">
+        包裹跟踪（中通）
+      </a>
+      <a ng-if="order.usps_track_id && order.usps_track_id.length == 14" target="_blank"
+          href="https://www.kuaidi100.com/all/annengwuliu.shtml?track_id={{order.usps_track_id}}">
+        （安能）
+      </a>
+      <div>
+        <editable-label label="备注" value="order.comment" on-change="onUpdate()">
+        </editable-label>
+      </div>
+    </div>
+    <div class="css-table-cell">
+      <div ng-if="order.shipping_date">发货：
+        <div>{{order.shipping_date}}</div>
+      </div>
+      <div ng-if="order.paid_date">付款日期：<div>{{order.paid_date}}</div></div>
+    </div>
+    <div class="css-table-cell">
+      <div>订单号</div>
+      <div>{{order.id}}</div>
+      <a href="invoice_print.html?order_id={{order.id}}" target="_blank">
+        Invoice
+      </a>
+      <div>利润: {{order.profit}}</div>
+    </div>
+    <div class="css-table-cell">
+      <iron-icon icon="delete" ng-click="onCancel()" class="delete-button"
+          title="取消订单" ng-show="admin">
+      </iron-icon>
+    </div>
+    <div class="css-table-cell">
+      <iron-icon icon="editor:merge-type" ng-click="onMerge()"
+          title="合并{{order.name}}的所有订单" class="clickable"
+          ng-show="admin && order.mergeable">
+      </iron-icon>
+    </div>
+  </div>
+</div>
+<div class="css-table shopping-cart-list" ondrop="dropItem(event)"
+    ondragover="allowDrop(event)" id="{{order.id}}-order">
+  <div class="css-table-row header">
+    <div class="css-table-cell">名称</div>
+    <div class="css-table-cell">数量</div>
+    <div class="css-table-cell">单价</div>
+    <div class="css-table-cell">利润</div>
+    <div ng-if="admin" class="css-table-cell"></div>
+  </div>
+  <div ng-repeat="item in order.items"
+      class="css-table-row selectable deletable"
+      ng-class="{'selected': item.selected}"
+      ng-click="item.selected = !item.selected"
+      draggable="{{item.selected}}" ondragstart="dragItem(event)">
+    <div class="css-table-cell">{{item.short_name || item.name}}</div>
+    <div class="css-table-cell" ng-switch="isItemSplit(item.item_id)">
+      <editable-label ng-switch-when="true" value="item.count"
+          on-change="onUpdateItem({'order': order, 'item': item})">
+      </editable-label>
+      <span ng-switch-default>{{item.count}}</span>
+    </div>
+    <div class="css-table-cell">
+      <editable-label value="item.price"
+          on-change="onUpdateItem({'order': order, 'item': item})">
+      </editable-label>
+    </div>
+    <div class="css-table-cell">
+      {{(item.count * (item.price - item.cost)).toFixed(2)}}
+    </div>
+    <div class="css-table-cell" ng-if="admin">
+      <iron-icon icon="delete" class="delete-button"
+          ng-click="onRemoveItem({'order': order, 'item': item})">
+      </iron-icon>
+      <iron-icon ng-if="item.count > 1" icon="communication:call-split"
+        class="delete-button" title="均分所选项"
+        ng-click="onSplitItem({'item': item})">
+      </div>
+    </div>
+  </div>
+</div>

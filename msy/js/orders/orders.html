@@ -1,0 +1,83 @@
+<div class="css-table">
+  <div class="css-table-row">
+  <label class="css-table-cell" ng-if="year">订单年份：
+    <select ng-options="value for value in years" ng-model="selectedYear.year"
+        ng-change="reload()"></select>
+  </label>
+  <label class="css-table-cell" ng-show="orders.length">输入订单号过滤：
+    <input ng-model="orderId" list="order-ids">
+    <datalist id="order-ids">
+      <option ng-repeat="id in orderIds" value="{{id}}"></option>
+    </datalist>
+  </label>
+  <label class="css-table-cell" ng-show="orders.length">输入电话过滤：
+    <input ng-model="tel" list="phones">
+    <datalist id="phones">
+      <option ng-repeat="phone in phones" value="{{phone}}"></option>
+    </datalist>
+  </label>
+  <label class="css-table-cell" ng-show="orders.length">输入姓名过滤：
+    <input ng-model="name" list="names">
+    <datalist id="names">
+      <option ng-repeat="name in names" value="{{name}}"></option>
+    </datalist>
+  </label>
+  </div>
+</div>
+<div ng-if="orders.length" class="css-table">
+  <div class="css-table-row">
+    <div class="css-table-cell"> 
+      总数 {{stats.count}}
+    </div>
+    <div class="css-table-cell"> 
+      金额 {{stats.sub_total}}
+    </div>
+    <div class="css-table-cell"> 
+      利润 {{(+stats.sub_total - (+stats.cost)).toFixed(2)}}
+    </div>
+    <!--label class="css-table-cell">显示汇总 
+      <input type="checkbox" ng-model="stats.showStats">
+    </label-->
+  </div>
+</div>
+<div ng-if="stats.showStats && admin">
+  <h2>汇总</h2>
+  <div ng-if="stats" class="section css-table order-details-line odd-even">
+    <div class="css-table-row header">
+      <div class="css-table-cell">编号</div>
+      <div class="css-table-cell">商品</div>
+      <div class="css-table-cell">价格</div>
+      <div class="css-table-cell">数量</div>
+      <div class="css-table-cell">合计</div>
+    </div>
+    <div ng-repeat="item in stats.items" class="css-table-row">
+      <div class="css-table-cell">{{$index + 1}}</div>
+      <div class="css-table-cell book-name">{{item.name}}</div>
+      <div class="css-table-cell">{{item.price}}</div>
+      <div class="css-table-cell">{{item.count}}</div>
+      <div class="css-table-cell">{{item.sub_total}}</div>
+    </div>
+    <div class="css-table-row">
+      <div class="css-table-cell"></div>
+      <div class="css-table-cell"></div>
+      <div class="css-table-cell">合计</div>
+      <div class="css-table-cell">{{stats.count}}</div>
+      <div class="css-table-cell">{{stats.sub_total}}</div>
+    </div>
+  </div>
+  <hr>
+</div>
+<order-stats ng-if="status == 3" orders="orders" year="selectedYear.year">
+</order-stats>
+<h3>订单列表</h3>
+<div ng-repeat="order in orders | filter: {id: orderId, phone: tel, name: name} | orderBy: '-created_time'"
+    class="section order-details-line">
+  <order-details order="order" admin="{{admin}}"
+      on-cancel="remove(order)" on-update="update(order)" user="user"
+      on-merge="merge(order)" on-split="split(order)"
+      on-split-item="splitSelectedItem(order, item)"
+      on-move-item="moveSelectedItem(fromId, toId)"
+      on-remove-item="removeOrderItem(order, item)"
+      on-update-item="updateItem(order, item)">
+  </order-details>
+</div>

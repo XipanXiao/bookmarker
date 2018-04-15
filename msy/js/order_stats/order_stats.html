@@ -1,0 +1,28 @@
+<div class="css-table odd-even center" ng-if="months.length">
+  <div class="css-table-row header">
+    <div class="css-table-cell">月份</div>
+    <div class="css-table-cell">出货</div>
+    <div class="css-table-cell">销售额</div>
+    <div class="css-table-cell">进货</div>
+    <div class="css-table-cell">成本</div>
+    <div class="css-table-cell">利润</div>
+  </div>
+  <div ng-repeat="month in monthKeys" class="css-table-row">
+    <div class="css-table-cell">{{month}}</div>
+    <div class="css-table-cell">{{months[month].itemsOut}}</div>
+    <div class="css-table-cell">{{months[month].gross.toFixed(2)}}</div>
+    <div class="css-table-cell">{{months[month].itemsIn}}</div>
+    <div class="css-table-cell">{{months[month].cost.toFixed(2)}}</div>
+    <div class="css-table-cell">
+      {{(months[month].gross - months[month].cost).toFixed(2)}}
+    </div>
+  </div>
+  <div class="css-table-row">
+    <div class="css-table-cell">总计</div>
+    <div class="css-table-cell">{{stats.itemsOut}}</div>
+    <div class="css-table-cell">{{stats.gross.toFixed(2)}}</div>
+    <div class="css-table-cell">{{stats.itemsIn}}</div>
+    <div class="css-table-cell">{{stats.cost.toFixed(2)}}</div>
+    <div class="css-table-cell">{{(stats.gross - stats.cost).toFixed(2)}}</div>
+  </div>
+</div>

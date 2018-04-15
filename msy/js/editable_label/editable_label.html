@@ -1,0 +1,9 @@
+<label class="clickable" ng-click="edit()">{{label}}
+  <span ng-switch="editing">
+    <input ng-switch-when="true" ng-model="editor.value" ng-keyup="keyPressed($event)"
+        ng-blur="commit()" autofocus type="{{type}}">
+    <span ng-switch-default class="selectable" ng-click="edit()">
+	    {{localValue}}
+    </span>
+  </span>
+</label>

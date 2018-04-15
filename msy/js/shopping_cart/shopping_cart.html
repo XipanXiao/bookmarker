@@ -1,0 +1,67 @@
+<div ng-if="confirming">
+  <h2>确认收货地址和联系方式</h2>
+  <hr>
+  <div ng-switch="refill" class="padded-element">
+    <label ng-switch-when="true">请选择目标：
+      <select ng-model="user.country">
+        <option value="CN">中国库存</option>
+        <option value="US">美国库存</option>
+      </select>
+    </label>
+    <address-editor ng-switch-default editing="true" user="user"
+        with-contact="true" can-create="true">
+    </address-editor>
+  </div>
+</div>
+<div ng-if="!cart.isEmpty">
+  <div class="css-table shopping-cart-list">
+    <div class="css-table-row">
+      <div class="css-table-cell"></div>
+      <div class="css-table-cell"></div>
+      <div class="css-table-cell">单价</div>
+      <div class="css-table-cell">国际运费预计</div>
+      <div class="css-table-cell">数量</div>
+      <div class="css-table-cell"></div>
+    </div>
+    <div ng-repeat="item in cart.items" class="css-table-row top-border deletable">
+      <div class="css-table-cell">
+        <img src="{{item.image || 'images/default.jpg'}}" class="item-image small">
+      </div>
+      <div class="css-table-cell">
+        <h3>{{item.name}}</h3>
+      </div>
+      <div class="css-table-cell">
+        <span ng-switch="refill">
+          <span ng-switch-when="true">¥{{item.cost}}</span>
+          <span ng-switch-default>¥{{item.price}}</span>
+        </span>
+      </div>
+      <div class="css-table-cell">¥{{item.int_shipping}}</div>
+      <div class="css-table-cell">
+        <input type="number" min="1" ng-model="item.count" ng-change="cart.update()">
+      </div>
+      <div class="css-table-cell">
+        <iron-icon icon="delete" ng-click="cart.remove(item.id)" class="delete-button"
+            title="删除">
+        </iron-icon>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="right">
+    <div class="center-align flex">
+      <div class="h-padded-element">
+        总价 ({{cart.size}} items): ¥{{cart.subTotal}}
+      </div>
+      <div class="h-padded-element">
+        国际运费: ¥{{cart.int_shipping}}
+      </div>
+      <div class="h-padded-element">
+        运费: ¥{{cart.shipping}}
+      </div>
+      <div class="yellow-button check-out-button center-align" ng-click="checkOut()">
+        {{confirming ? '提交订单' : '结账'}}
+      </div>
+    </div>
+  </div>
+</div>
